@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Thermostat</string>
+    <string name="thermostat_is_heating">Thermostat is heating</string>
+    <string name="uptime">Uptime: %1$d days %2$02d:%3$02d:%4$02d</string>
+    <string name="target_temperature">Target temperature</string>
+    <string name="current_temperature">Current temperature</string>
+    <string name="temperature_placeholder">---</string>
+    <string name="heater_status">Heater status</string>
+
 </resources>
