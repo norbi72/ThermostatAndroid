@@ -6,5 +6,6 @@
     <string name="current_temperature">Current temperature</string>
     <string name="temperature_placeholder">---</string>
     <string name="heater_status">Heater status</string>
+    <string name="chart_label_room">Room #%1$d, sensor #%2$d</string>
 
 </resources>

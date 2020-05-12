@@ -19,6 +19,9 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import hu.norbi.thermostat.R;
 
 public class ChartHelper implements OnChartValueSelectedListener {
@@ -26,8 +29,10 @@ public class ChartHelper implements OnChartValueSelectedListener {
     private final int primaryColor;
     private final int primaryDarkColor;
     private final int backgroundColor;
+    private final int secondaryColor;
     private Resources resources;
     private LineChart mChart;
+    private Map<RoomSensorPair, Integer> lineDataSets = new HashMap<>();
 
     public ChartHelper(Resources resources, LineChart chart) {
         this.resources = resources;
@@ -35,6 +40,7 @@ public class ChartHelper implements OnChartValueSelectedListener {
         primaryDarkColor = ResourcesCompat.getColor(resources, R.color.primaryDarkColor, null);
         primaryColor = ResourcesCompat.getColor(resources, R.color.primaryColor, null);
         backgroundColor = ResourcesCompat.getColor(resources, R.color.primaryExtraLightColor, null);
+        secondaryColor = ResourcesCompat.getColor(resources, R.color.secondaryColor, null);
 
         mChart = chart;
         mChart.setOnChartValueSelectedListener(this);
@@ -97,21 +103,33 @@ public class ChartHelper implements OnChartValueSelectedListener {
 
     public void setChart(LineChart chart){ this.mChart = chart; }
 
-    public void addEntry(float value) {
+    public void addEntry(int roomId, int sensor, float value) {
 
         LineData data = mChart.getData();
 
         if (data != null){
 
-            ILineDataSet set = data.getDataSetByIndex(0);
+            RoomSensorPair roomSensorPair = new RoomSensorPair(roomId, sensor);
+            ILineDataSet set = null;
+            Integer datasetNumber = 0;
+
+            if (lineDataSets.containsKey(roomSensorPair)) {
+                datasetNumber = lineDataSets.get(roomSensorPair);
+                try {
+                    set = data.getDataSetByIndex(datasetNumber);
+                } catch (NullPointerException ignored) {}
+            }
+
             // set.addEntry(...); // can be called as well
 
             if (set == null) {
-                set = createSet();
+                set = createSet(roomId, sensor);
                 data.addDataSet(set);
+                lineDataSets.put(roomSensorPair, lineDataSets.size());
+                datasetNumber = lineDataSets.size();
             }
 
-            data.addEntry(new Entry(set.getEntryCount(),value),0);
+            data.addEntry(new Entry(set.getEntryCount(),value), datasetNumber);
             Log.w("chart", set.getEntryForIndex(set.getEntryCount()-1).toString());
 
             data.notifyDataChanged();
@@ -132,21 +150,30 @@ public class ChartHelper implements OnChartValueSelectedListener {
         }
     }
 
-    private LineDataSet createSet() {
-        LineDataSet set = new LineDataSet(null, "Room 1");
+    private LineDataSet createSet(int roomId, int sensor) {
+        LineDataSet set = new LineDataSet(null, String.format(resources.getString(R.string.chart_label_room), roomId, sensor));
         set.setAxisDependency(YAxis.AxisDependency.LEFT);
-        set.setColor(primaryColor);
+        switch (roomId) {
+            case 1:
+                set.setColor(sensor == 1 ? primaryColor : primaryDarkColor);
+                break;
+            case 5:
+                set.setColor(secondaryColor);
+                break;
+            default:
+                set.setColor(Color.WHITE);
+        }
+
         //set.setCircleColor(Color.WHITE);
         set.setLineWidth(3f);
         //set.setCircleRadius(4f);
 //        set.setFillAlpha(65);
         set.setFillColor(backgroundColor);
-//        set.setHighLightColor(Color.rgb(67, 164, 34));
         set.setHighLightColor(primaryDarkColor);
-//        set.setValueTextColor(Color.rgb(67, 164, 34));
         set.setValueTextColor(primaryDarkColor);
         set.setValueTextSize(9f);
         set.setDrawValues(false);
+        set.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
         return set;
     }
 

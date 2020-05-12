@@ -56,7 +56,10 @@ public class MainActivity extends AppCompatActivity {
                     statusView.setText(mqttMessage.toString());
                 }
 
-                mChart.addEntry((float) Math.random()*24);
+                mChart.addEntry(1, 1,(float) Math.random()*24);
+                mChart.addEntry(1, 2,(float) Math.random()*24);
+
+                mChart.addEntry(5, 1,(float) Math.random()*24);
             }
 
             @Override
