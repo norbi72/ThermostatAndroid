@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="60dp">
+
+    <TextView
+        android:id="@+id/tvContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/chart_marker_border"
+        android:ellipsize="end"
+        android:lines="3"
+        android:padding="6dp"
+        android:singleLine="false"
+        android:text="16.23 °C\n2020. 05. 12 19:51:30\nRoom #1, sensor #1"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/secondaryDarkColor"
+        android:textSize="12sp" />
+
+</RelativeLayout>

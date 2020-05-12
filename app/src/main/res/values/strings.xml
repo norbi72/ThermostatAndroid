@@ -7,5 +7,8 @@
     <string name="temperature_placeholder">---</string>
     <string name="heater_status">Heater status</string>
     <string name="chart_label_room">Room #%1$d, sensor #%2$d</string>
+    <string name="chart_no_data">Please wait...</string>
+    <string name="chart_description">Temperatures</string>
+    <string name="chart_marker">%1$2.2f °C\n%2$s\n%3$s</string>
 
 </resources>
