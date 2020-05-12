@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/primaryLightColor"
+    android:background="@color/primaryExtraLightColor"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
@@ -45,6 +45,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="57dp"
+        android:background="@color/primaryLightColor"
         android:orientation="horizontal">
 
         <ImageView
@@ -114,16 +115,24 @@
         </LinearLayout>
     </LinearLayout>
 
-    <Space
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/chart"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_margin="10dp"
         android:layout_weight="1" />
+
+    <!--    <Space-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="0dp"-->
+    <!--        android:layout_weight="1" />-->
 
     <TextView
         android:id="@+id/statusView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/uptime"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:textColor="@color/primaryDarkColor" />
 
 </LinearLayout>

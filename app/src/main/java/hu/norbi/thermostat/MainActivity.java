@@ -6,16 +6,21 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.LineChart;
+
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
+import hu.norbi.thermostat.helper.ChartHelper;
 import hu.norbi.thermostat.helper.MqttHelper;
 
 public class MainActivity extends AppCompatActivity {
 
     MqttHelper mqttHelper;
     private TextView statusView;
+    ChartHelper mChart;
+    LineChart chart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         statusView = findViewById(R.id.statusView);
+        chart = findViewById(R.id.chart);
+        mChart = new ChartHelper(getResources(), chart);
 
         startMqtt();
     }
@@ -48,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
                 if (topic.endsWith("/response")) {
                     statusView.setText(mqttMessage.toString());
                 }
+
+                mChart.addEntry((float) Math.random()*24);
             }
 
             @Override
