@@ -131,7 +131,7 @@
         android:id="@+id/statusView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/uptime"
+        android:text="@string/uptime_placeholder"
         android:textAlignment="center"
         android:textColor="@color/primaryDarkColor" />
 

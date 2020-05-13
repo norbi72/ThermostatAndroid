@@ -15,6 +15,8 @@ public class MainActivity extends AppCompatActivity {
 
     public MqttHelper mqttHelper;
     public TextView statusView;
+    public TextView currentTargetView;
+    public TextView currentTempView;
     public ChartHelper mChart;
     private LineChart chart;
     public long REFERENCE_TIMESTAMP;
@@ -26,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
 
         REFERENCE_TIMESTAMP = getResources().getInteger(R.integer.referenceTimestamp);
         statusView = findViewById(R.id.statusView);
+        currentTargetView = findViewById(R.id.targetTempView);
+        currentTempView = findViewById(R.id.currentTempView);
         chart = findViewById(R.id.chart);
         mChart = new ChartHelper(getResources(), getApplicationContext(), chart);
 
