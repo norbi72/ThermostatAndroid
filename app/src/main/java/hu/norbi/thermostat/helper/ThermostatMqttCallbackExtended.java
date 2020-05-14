@@ -103,13 +103,39 @@ public class ThermostatMqttCallbackExtended implements MqttCallbackExtended {
             } else if (msg.contains("\"icon\":")) {
                 changeIcon(msg.substring(msg.indexOf("\"icon\":")+7, msg.length()-1));
             } else if (msg.contains("\"power\":")) {
-                setPower(msg.substring(msg.indexOf("\"power\":")+8, msg.length()-1));
+                setPower(msg.substring(msg.indexOf("\"power\":")+9, msg.length()-2));
             }
         } else if (topic.endsWith("/screen")) {
             if (msg.contains("reference temp changed to ")) {
                 writeCurrent(msg.substring(msg.indexOf("reference temp changed to ")+26));
             } else if (msg.contains("Screen refresh at")) {
                 mainActivity.requestData();
+            } else {
+                if (msg.contains("icon changed to ")) {
+                    int txtpos = msg.indexOf("icon changed to ");
+                    changeIcon(msg.substring(txtpos+16, txtpos+17));
+                }
+                if (msg.contains("target temp changed to ")) {
+                    int txtpos = msg.indexOf("target temp changed to ");
+                    int txtend = msg.indexOf(",", txtpos + 23);
+                    writeCurrentTarget(msg.substring(txtpos+23, txtend));
+                }
+                if (msg.contains("status changed to ")) {
+                    int txtpos = msg.indexOf("status changed to ");
+                    int txtend = msg.indexOf(",", txtpos + 18);
+                    changeIcon(msg.substring(txtpos+18, txtend));
+                }
+                if (msg.contains("reference temp changed to ")) {
+                    int txtpos = msg.indexOf("reference temp changed to ");
+                    int txtend = msg.indexOf(",", txtpos + 26);
+                    writeCurrent(msg.substring(txtpos+26, txtend));
+                }
+            }
+        } else if (topic.equalsIgnoreCase("/info")) {
+            if (msg.contains("HEATING")) {
+                setPower("heating");
+            } else if (msg.contains("STANDBY")) {
+                setPower("standby");
             }
         }
 
