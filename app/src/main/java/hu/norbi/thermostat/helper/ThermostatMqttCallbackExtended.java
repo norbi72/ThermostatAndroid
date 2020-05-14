@@ -1,6 +1,11 @@
 package hu.norbi.thermostat.helper;
 
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.util.Log;
+import android.view.View;
+
+import androidx.annotation.RequiresApi;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
@@ -9,6 +14,7 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import hu.norbi.thermostat.MainActivity;
 import hu.norbi.thermostat.R;
 
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class ThermostatMqttCallbackExtended implements MqttCallbackExtended {
     private MainActivity mainActivity;
     final private String uptimeFormat;
@@ -41,6 +47,26 @@ public class ThermostatMqttCallbackExtended implements MqttCallbackExtended {
         mainActivity.currentTempView.setText(String.format(temperatureFormat2D, Double.valueOf(tempValue)));
     }
 
+    private void changeIcon(String iconId) {
+        Drawable icon;
+        switch (iconId) {
+            case "0":
+                icon = mainActivity.getResources().getDrawable(R.drawable.ic_sun, null);
+                break;
+            case "1":
+                icon = mainActivity.getResources().getDrawable(R.drawable.ic_moon, null);
+                break;
+            case "2":
+                icon = mainActivity.getResources().getDrawable(R.drawable.ic_tv, null);
+                break;
+            default:
+                icon = mainActivity.getResources().getDrawable(R.drawable.ic_power, null);
+                break;
+        }
+        mainActivity.statusIconView.setImageDrawable(icon);
+        mainActivity.statusIconView.setVisibility(View.VISIBLE);
+    }
+
     @Override
     public void connectComplete(boolean b, String s) {
         Log.w("mqtt","Connected " + b + " - " + s);
@@ -48,6 +74,11 @@ public class ThermostatMqttCallbackExtended implements MqttCallbackExtended {
         mainActivity.mqttHelper.sendMessage("thermostat/state/cmd", "{\"get\":\"currentTarget\"}");
         mainActivity.mqttHelper.sendMessage("thermostat/state/cmd", "{\"get\":\"reference\"}");
         mainActivity.mqttHelper.sendMessage("thermostat/state/cmd", "{\"get\":\"icon\"}");
+        mainActivity.mqttHelper.sendMessage("thermostat/state/cmd", "{\"get\":\"power\"}");
+    }
+
+    private void setPower(String state) {
+        mainActivity.powerIconView.setVisibility(state.equalsIgnoreCase("heating") ? View.VISIBLE : View.INVISIBLE);
     }
 
     @Override
@@ -69,14 +100,17 @@ public class ThermostatMqttCallbackExtended implements MqttCallbackExtended {
                 writeCurrentTarget(msg.substring(msg.indexOf("\"currentTarget\":")+16, msg.length()-1));
             } else if (msg.contains("\"reference\":")) {
                 writeCurrent(msg.substring(msg.indexOf("\"reference\":")+12, msg.length()-1));
+            } else if (msg.contains("\"icon\":")) {
+                changeIcon(msg.substring(msg.indexOf("\"icon\":")+7, msg.length()-1));
+            } else if (msg.contains("\"power\":")) {
+                setPower(msg.substring(msg.indexOf("\"power\":")+8, msg.length()-1));
             }
-            final long timestamp = System.currentTimeMillis();
-            final long newTimestamp = timestamp/1000L - mainActivity.REFERENCE_TIMESTAMP;
-
-            mainActivity.mChart.addEntry(1, 1, newTimestamp, (float) Math.random()*24);
-            mainActivity.mChart.addEntry(1, 2, newTimestamp, (float) Math.random()*24);
-
-            mainActivity.mChart.addEntry(5, 1, newTimestamp, (float) Math.random()*24);
+        } else if (topic.endsWith("/screen")) {
+            if (msg.contains("reference temp changed to ")) {
+                writeCurrent(msg.substring(msg.indexOf("reference temp changed to ")+26));
+            } else if (msg.contains("Screen refresh at")) {
+                mainActivity.requestData();
+            }
         }
 
     }

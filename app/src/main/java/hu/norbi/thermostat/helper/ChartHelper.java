@@ -45,6 +45,7 @@ public class ChartHelper implements OnChartValueSelectedListener {
 
     public ChartHelper(Resources resources, Context applicationContext, LineChart chart) {
         this.resources = resources;
+        this.applicationContext = applicationContext;
 
         primaryDarkColor = ResourcesCompat.getColor(resources, R.color.primaryDarkColor, null);
         primaryColor = ResourcesCompat.getColor(resources, R.color.primaryColor, null);
@@ -52,14 +53,18 @@ public class ChartHelper implements OnChartValueSelectedListener {
         backgroundColor = ResourcesCompat.getColor(resources, R.color.primaryExtraLightColor, null);
         secondaryColor = ResourcesCompat.getColor(resources, R.color.secondaryColor, null);
         REFERENCE_TIMESTAMP = resources.getInteger(R.integer.referenceTimestamp);
-        this.applicationContext = applicationContext;
 
         mChart = chart;
         mChart.setOnChartValueSelectedListener(this);
 
+        initChart();
+    }
+
+    private void initChart() {
         ChartMarkerView mv = new ChartMarkerView(applicationContext, R.layout.chart_marker_view_layout);
         // set the marker to the chart
-        mChart.setMarker(mv);;
+        mChart.setMarker(mv);
+
         mChart.setHighlightPerTapEnabled(true);
 
         // no description text
@@ -101,21 +106,18 @@ public class ChartHelper implements OnChartValueSelectedListener {
         l.setTypeface(Typeface.MONOSPACE);
         l.setTextColor(primaryColor);
 
-        XAxis bottomAxis = mChart.getXAxis();
-        bottomAxis.setTypeface(Typeface.MONOSPACE);
-        bottomAxis.setTextColor(primaryColor);
-        bottomAxis.setDrawGridLines(true);
-        bottomAxis.setAvoidFirstLastClipping(true);
-        bottomAxis.setEnabled(true);
-        bottomAxis.setDrawAxisLine(true);
-        bottomAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        bottomAxis.setGranularity(5*60f);
-        bottomAxis.setValueFormatter(new IAxisValueFormatter() {
-            @Override
-            public String getFormattedValue(float dateInSeconds, AxisBase axis) {
-                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
-                return sdf.format(new Date((long) (dateInSeconds + REFERENCE_TIMESTAMP)*1000L));
-            }
+        XAxis xAxis = mChart.getXAxis();
+        xAxis.setTypeface(Typeface.MONOSPACE);
+        xAxis.setTextColor(primaryColor);
+        xAxis.setDrawGridLines(true);
+        xAxis.setAvoidFirstLastClipping(true);
+        xAxis.setEnabled(true);
+        xAxis.setDrawAxisLine(true);
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setGranularity(5*60f);
+        xAxis.setValueFormatter((dateInSeconds, axis) -> {
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
+            return sdf.format(new Date((long) (dateInSeconds + REFERENCE_TIMESTAMP)*1000L));
         });
 
         YAxis leftAxis = mChart.getAxisLeft();
@@ -125,7 +127,20 @@ public class ChartHelper implements OnChartValueSelectedListener {
 
         YAxis rightAxis = mChart.getAxisRight();
         rightAxis.setEnabled(false);
+    }
 
+    public void reset() {
+        LineData data = mChart.getData();
+
+        int i = 0;
+        while (data.removeDataSet(0)) { i++; }
+        lineDataSets.clear();
+
+        mChart.invalidate();
+        //mChart.clear();
+        //initChart(resources, applicationContext);
+
+        mChart.notifyDataSetChanged();
     }
 
     public void setChart(LineChart chart){ this.mChart = chart; }
@@ -152,11 +167,14 @@ public class ChartHelper implements OnChartValueSelectedListener {
 
             if (set == null) {
                 set = createSet(roomId, sensor);
+                //Log.w("chart", "Dataset created: " + set);
                 data.addDataSet(set);
                 lineDataSets.put(roomSensorPair, lineDataSets.size());
                 datasetNumber = lineDataSets.size()-1;
+                //Log.w("chart", "Dataset number: " + datasetNumber);
             }
 
+            //set.addEntry(new Entry(timestamp, value, roomSensorPair));
             data.addEntry(new Entry(timestamp, value, roomSensorPair), datasetNumber);
             Log.w("chart", "Dataset: " + datasetNumber + " " + set.getEntryForIndex(set.getEntryCount()-1).toString());
 
@@ -174,6 +192,7 @@ public class ChartHelper implements OnChartValueSelectedListener {
             final long newNow = now / 1000L - REFERENCE_TIMESTAMP;
             mChart.moveViewTo(newNow, data.getYMax(), YAxis.AxisDependency.LEFT);
             mChart.setVisibleXRange(30*60, 30*60);
+            mChart.getXAxis().setAxisMaximum(newNow + 5*60);
 
             // this automatically refreshes the chart (calls invalidate())
             // mChart.moveViewTo(data.getXValCount()-7, 55f,
@@ -204,7 +223,7 @@ public class ChartHelper implements OnChartValueSelectedListener {
         set.setValueTextColor(primaryDarkColor);
         set.setValueTextSize(9f);
         set.setDrawValues(false);
-        set.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
+        set.setMode(LineDataSet.Mode.CUBIC_BEZIER);
         return set;
     }
 
