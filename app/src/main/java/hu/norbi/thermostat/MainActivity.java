@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.github.mikephil.charting.charts.LineChart;
 
@@ -22,6 +23,7 @@ import java.time.format.DateTimeFormatter;
 
 import hu.norbi.thermostat.helper.ChartHelper;
 import hu.norbi.thermostat.helper.HttpManager;
+import hu.norbi.thermostat.helper.MainActivityViewModel;
 import hu.norbi.thermostat.helper.MqttHelper;
 import hu.norbi.thermostat.helper.RequestPackage;
 import hu.norbi.thermostat.helper.ThermostatMqttCallbackExtended;
@@ -36,9 +38,12 @@ public class MainActivity extends AppCompatActivity {
     public ImageView statusIconView;
     public ImageView powerIconView;
     public ChartHelper mChart;
+    @SuppressWarnings("FieldCanBeLocal")
     private LineChart chart;
     public long REFERENCE_TIMESTAMP;
+    @SuppressWarnings("FieldCanBeLocal")
     private View currentTempLayout;
+    public MainActivityViewModel mViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,11 +58,18 @@ public class MainActivity extends AppCompatActivity {
         powerIconView = findViewById(R.id.powerIconView);
         currentTempLayout = findViewById(R.id.currentTempLayout);
         chart = findViewById(R.id.chart);
-        mChart = new ChartHelper(getResources(), getApplicationContext(), chart);
+
+        mViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
 
         currentTempLayout.setOnClickListener(v -> requestData());
+        mChart = new ChartHelper(getResources(), getApplicationContext(), chart);
         startMqtt();
-        requestData();
+
+        if (mViewModel.tempRecords.isEmpty()) {
+            requestData();
+        } else {
+            mViewModel.tempRecords.forEach(rec -> mChart.addEntry(rec.roomId, rec.sensor, rec.newTimestamp, rec.temperature));
+        }
     }
 
     private void startMqtt(){
@@ -98,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
             if (result.isEmpty()) return;
 
             mChart.reset();
+            mViewModel.tempRecords.clear();
             try {
                 for (String line: result.split("\n")) {
 System.out.println("LINE " + line);
@@ -110,6 +123,8 @@ System.out.println("LINE " + line);
 
                     final long newTimestamp = LocalDateTime.parse(date, formatter).toEpochSecond(zoneOffset) - REFERENCE_TIMESTAMP;
                     mChart.addEntry(roomId, sensor, newTimestamp, temperature);
+                    MainActivityViewModel.TempRecord tempRecord = new MainActivityViewModel.TempRecord(roomId, sensor, newTimestamp, temperature);
+                    mViewModel.tempRecords.add(tempRecord);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

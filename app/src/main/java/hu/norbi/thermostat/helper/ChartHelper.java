@@ -191,7 +191,7 @@ public class ChartHelper implements OnChartValueSelectedListener {
             final long now = System.currentTimeMillis();
             final long newNow = now / 1000L - REFERENCE_TIMESTAMP;
             mChart.moveViewTo(newNow, data.getYMax(), YAxis.AxisDependency.LEFT);
-            mChart.setVisibleXRange(30*60, 30*60);
+//            mChart.setVisibleXRange(20*60, 35*60);
             mChart.getXAxis().setAxisMaximum(newNow + 5*60);
 
             // this automatically refreshes the chart (calls invalidate())
