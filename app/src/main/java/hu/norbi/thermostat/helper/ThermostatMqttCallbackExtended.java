@@ -16,7 +16,7 @@ import hu.norbi.thermostat.R;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class ThermostatMqttCallbackExtended implements MqttCallbackExtended {
-    private MainActivity mainActivity;
+    final private MainActivity mainActivity;
     final private String uptimeFormat;
     final private String temperatureFormat1D;
     final private String temperatureFormat2D;
@@ -27,11 +27,11 @@ public class ThermostatMqttCallbackExtended implements MqttCallbackExtended {
         temperatureFormat1D = mainActivity.getResources().getText(R.string.temperature_1d).toString();
         temperatureFormat2D = mainActivity.getResources().getText(R.string.temperature_2d).toString();
 
-        if (null != mainActivity.mViewModel.uptime) writeUptime(mainActivity.mViewModel.uptime);
-        if (null != mainActivity.mViewModel.targetTemp) writeCurrentTarget(mainActivity.mViewModel.targetTemp);
-        if (null != mainActivity.mViewModel.currentTemp) writeCurrent(mainActivity.mViewModel.currentTemp);
-        if (null != mainActivity.mViewModel.icon) changeIcon(mainActivity.mViewModel.icon);
-        if (null != mainActivity.mViewModel.state) setPower(mainActivity.mViewModel.state);
+        if (null != mainActivity.mViewModel.getUptime()) writeUptime(mainActivity.mViewModel.getUptime());
+        if (null != mainActivity.mViewModel.getTargetTemp()) writeCurrentTarget(mainActivity.mViewModel.getTargetTemp());
+        if (null != mainActivity.mViewModel.getCurrentTemp()) writeCurrent(mainActivity.mViewModel.getCurrentTemp());
+        if (null != mainActivity.mViewModel.getIcon()) changeIcon(mainActivity.mViewModel.getIcon());
+        if (null != mainActivity.mViewModel.getState()) setPower(mainActivity.mViewModel.getState());
     }
 
     private void writeUptime(String uptime) {
@@ -43,19 +43,19 @@ public class ThermostatMqttCallbackExtended implements MqttCallbackExtended {
         final int mins = hoursRem / 60;
         final int secs = hoursRem % 60;
         mainActivity.statusView.setText(String.format(uptimeFormat, days, hours, mins, secs));
-        mainActivity.mViewModel.uptime = uptime;
+        mainActivity.mViewModel.setUptime(uptime);
     }
 
     private void writeCurrentTarget(String tempValue) {
         Double temperature = Double.valueOf(tempValue);
         mainActivity.currentTargetView.setText(String.format(temperatureFormat1D, temperature));
-        mainActivity.mViewModel.targetTemp = tempValue;
+        mainActivity.mViewModel.setTargetTemp(tempValue);
     }
 
     private void writeCurrent(String tempValue) {
         Double temperature = Double.valueOf(tempValue);
         mainActivity.currentTempView.setText(String.format(temperatureFormat2D, temperature));
-        mainActivity.mViewModel.currentTemp = tempValue;
+        mainActivity.mViewModel.setCurrentTemp(tempValue);
     }
 
     private void changeIcon(String iconId) {
@@ -77,18 +77,19 @@ public class ThermostatMqttCallbackExtended implements MqttCallbackExtended {
         }
         mainActivity.statusIconView.setImageDrawable(icon);
         mainActivity.statusIconView.setVisibility(View.VISIBLE);
-        mainActivity.mViewModel.icon = iconId;
+        mainActivity.mViewModel.setIcon(iconId);
     }
 
     private void setPower(String state) {
         mainActivity.powerIconView.setVisibility(state.equalsIgnoreCase("heating") ? View.VISIBLE : View.INVISIBLE);
-        mainActivity.mViewModel.state = state;
+        mainActivity.mViewModel.setState(state);
     }
 
     @Override
     public void connectComplete(boolean b, String s) {
         Log.w("mqtt","Connected " + b + " - " + s);
-        if (null == mainActivity.mViewModel.uptime) {
+        if (null == mainActivity.mViewModel.getUptime() || mainActivity.mViewModel.getLastChangeTime()+5*60 < mainActivity.mViewModel.getNewNow()) {
+            Log.d("mqtt", "Last change is too old, requests new MQTT data");
             mainActivity.mqttHelper.sendMessage("thermostat/state/cmd", "{\"get\":\"uptime\"}");
             mainActivity.mqttHelper.sendMessage("thermostat/state/cmd", "{\"get\":\"currentTarget\"}");
             mainActivity.mqttHelper.sendMessage("thermostat/state/cmd", "{\"get\":\"reference\"}");
@@ -99,13 +100,13 @@ public class ThermostatMqttCallbackExtended implements MqttCallbackExtended {
 
     @Override
     public void connectionLost(Throwable throwable) {
-
+        Log.d("mqtt", "Connection lost. " + throwable.getMessage());
     }
 
     @Override
     public void messageArrived(String topic, MqttMessage mqttMessage) {
-        String msg = mqttMessage.toString();
-        Log.w("Debug", "Topic: " + topic + " Msg: " + msg);
+        final String msg = mqttMessage.toString();
+        Log.d("Debug", "Topic: " + topic + " Msg: " + msg);
         //dataReceived.setText(mqttMessage.toString());
         if (topic.endsWith("/uptime")) {
             writeUptime(msg);

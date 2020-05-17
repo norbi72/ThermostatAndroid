@@ -9,7 +9,6 @@ import android.util.Log;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
@@ -17,7 +16,6 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
@@ -37,10 +35,10 @@ public class ChartHelper implements OnChartValueSelectedListener {
     private final int backgroundColor;
     private final int secondaryColor;
     private final int primaryLightColor;
-    private Resources resources;
-    private Context applicationContext;
-    private LineChart mChart;
-    private Map<RoomSensorPair, Integer> lineDataSets = new HashMap<>();
+    private final Resources resources;
+    private final Context applicationContext;
+    private final LineChart mChart;
+    private final Map<RoomSensorPair, Integer> lineDataSets = new HashMap<>();
     private final int REFERENCE_TIMESTAMP;
 
     public ChartHelper(Resources resources, Context applicationContext, LineChart chart) {
@@ -132,18 +130,14 @@ public class ChartHelper implements OnChartValueSelectedListener {
     public void reset() {
         LineData data = mChart.getData();
 
-        int i = 0;
-        while (data.removeDataSet(0)) { i++; }
+        //noinspection StatementWithEmptyBody
+        while (data.removeDataSet(0)) { }
         lineDataSets.clear();
 
         mChart.invalidate();
-        //mChart.clear();
-        //initChart(resources, applicationContext);
 
         mChart.notifyDataSetChanged();
     }
-
-    public void setChart(LineChart chart){ this.mChart = chart; }
 
     public void addEntry(int roomId, int sensor, long timestamp, float value) {
 
@@ -167,16 +161,16 @@ public class ChartHelper implements OnChartValueSelectedListener {
 
             if (set == null) {
                 set = createSet(roomId, sensor);
-                //Log.w("chart", "Dataset created: " + set);
+                Log.d("chart", "Dataset created: " + set);
                 data.addDataSet(set);
                 lineDataSets.put(roomSensorPair, lineDataSets.size());
                 datasetNumber = lineDataSets.size()-1;
-                //Log.w("chart", "Dataset number: " + datasetNumber);
+                Log.d("chart", "Dataset number: " + datasetNumber);
             }
 
             //set.addEntry(new Entry(timestamp, value, roomSensorPair));
             data.addEntry(new Entry(timestamp, value, roomSensorPair), datasetNumber);
-            Log.w("chart", "Dataset: " + datasetNumber + " " + set.getEntryForIndex(set.getEntryCount()-1).toString());
+            Log.d("chart", "Dataset: " + datasetNumber + " " + set.getEntryForIndex(set.getEntryCount()-1).toString());
 
             data.notifyDataChanged();
 
@@ -188,16 +182,20 @@ public class ChartHelper implements OnChartValueSelectedListener {
             // mChart.setVisibleYRange(30, AxisDependency.LEFT);
             // move to the latest entry
             //mChart.moveViewTo(set.getEntryForIndex(set.getEntryCount()-1).getX(), data.getYMax(), YAxis.AxisDependency.LEFT);
-            final long now = System.currentTimeMillis();
-            final long newNow = now / 1000L - REFERENCE_TIMESTAMP;
-            mChart.moveViewTo(newNow, data.getYMax(), YAxis.AxisDependency.LEFT);
-//            mChart.setVisibleXRange(20*60, 35*60);
-            mChart.getXAxis().setAxisMaximum(newNow + 5*60);
+            moveToCurrent();
 
             // this automatically refreshes the chart (calls invalidate())
             // mChart.moveViewTo(data.getXValCount()-7, 55f,
             // AxisDependency.LEFT);
         }
+    }
+
+    public void moveToCurrent() {
+        final long now = System.currentTimeMillis();
+        final long newNow = now / 1000L - REFERENCE_TIMESTAMP;
+        mChart.moveViewTo(newNow, mChart.getData().getYMax(), YAxis.AxisDependency.LEFT);
+//            mChart.setVisibleXRange(20*60, 35*60);
+        mChart.getXAxis().setAxisMaximum(newNow + 5*60);
     }
 
     private LineDataSet createSet(int roomId, int sensor) {
@@ -229,12 +227,12 @@ public class ChartHelper implements OnChartValueSelectedListener {
 
     @Override
     public void onValueSelected(Entry e, Highlight h) {
-        Log.i("Entry selected", e.toString() + " HL " + h.toString());
+        Log.d("Entry selected", e.toString() + " HL " + h.toString());
     }
 
     @Override
     public void onNothingSelected(){
-        Log.i("Nothing selected", "Nothing selected.");
+        Log.d("Nothing selected", "Nothing selected.");
     }
 
 }

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -64,11 +65,24 @@ public class MainActivity extends AppCompatActivity {
         currentTempLayout.setOnClickListener(v -> requestData());
         mChart = new ChartHelper(getResources(), getApplicationContext(), chart);
         startMqtt();
+    }
 
-        if (mViewModel.tempRecords.isEmpty()) {
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("main", "RESUME");
+        if (mViewModel.getTempRecords().isEmpty()) {
+            Log.d("main", "No temperature records in cache -> load from server");
             requestData();
         } else {
-            mViewModel.tempRecords.forEach(rec -> mChart.addEntry(rec.roomId, rec.sensor, rec.newTimestamp, rec.temperature));
+            long max = mViewModel.getTempRecords().stream().mapToLong(tempRec -> tempRec.newTimestamp).max().orElse(0L);
+            if ((max + REFERENCE_TIMESTAMP)+300 < System.currentTimeMillis()/1000L) {    // if the last data older than 5 minutes
+                Log.d("main", "Newest temperature record in cache too old -> load from server");
+                requestData();
+            } else {
+                Log.d("main", "Newest temperature record in cache is fresh enough  -> move chart to current time");
+                mChart.moveToCurrent();
+            }
         }
     }
 
@@ -107,13 +121,16 @@ public class MainActivity extends AppCompatActivity {
         // onPostExecute() method below. The String should contain JSON data.
         @Override
         protected void onPostExecute(String result) {
-            if (result.isEmpty()) return;
+            if (result.isEmpty()) {
+                return;
+            }
 
             mChart.reset();
-            mViewModel.tempRecords.clear();
+            mViewModel.getTempRecords().clear();
             try {
                 for (String line: result.split("\n")) {
-System.out.println("LINE " + line);
+                    Log.d("httpRequest", line);
+
                     final JSONObject jsonObject = new JSONObject(line);
                     final int roomId = jsonObject.getInt("roomId");
                     final int sensor = jsonObject.getInt("sensor");
@@ -124,7 +141,7 @@ System.out.println("LINE " + line);
                     final long newTimestamp = LocalDateTime.parse(date, formatter).toEpochSecond(zoneOffset) - REFERENCE_TIMESTAMP;
                     mChart.addEntry(roomId, sensor, newTimestamp, temperature);
                     MainActivityViewModel.TempRecord tempRecord = new MainActivityViewModel.TempRecord(roomId, sensor, newTimestamp, temperature);
-                    mViewModel.tempRecords.add(tempRecord);
+                    mViewModel.addTempRecord(tempRecord);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
