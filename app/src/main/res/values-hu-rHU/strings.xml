@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="app_name">Termosztát</string>
+    <string name="thermostat_is_heating">Fűtés bekapcsolva</string>
+    <string name="uptime">Üzemidő: <xliff:g id="days" example="7">%1$d</xliff:g> nap <xliff:g id="hours" example="02">%2$02d</xliff:g>:<xliff:g id="minutes" example="32">%3$02d</xliff:g>:<xliff:g id="seconds" example="09">%4$02d</xliff:g></string>
+    <string name="target_temperature">Cél</string>
+    <string name="current_temperature">Jelenleg</string>
+    <string name="uptime_placeholder">Üzemidő: <i>ismeretlen</i></string>
+    <string name="heater_status">Termosztát állapota</string>
+    <string name="chart_label_room">Szoba #<xliff:g id="room_id" example="1">%1$d</xliff:g>, hőmérő #<xliff:g id="sensor_number">%2$d</xliff:g></string>
+    <string name="chart_no_data">Kis türelmet…</string>
+    <string name="chart_description">Mért hőmérsékletek az elmúlt 30 percben</string>
+    <string name="toast_refreshing">Frissítés…</string>
+</resources>

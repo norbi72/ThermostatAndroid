@@ -38,6 +38,22 @@ public class MainActivityViewModel extends AndroidViewModel {
             this.newTimestamp = newTimestamp;
             this.temperature = temperature;
         }
+
+        public int getRoomId() {
+            return roomId;
+        }
+
+        public int getSensor() {
+            return sensor;
+        }
+
+        public long getNewTimestamp() {
+            return newTimestamp;
+        }
+
+        public float getTemperature() {
+            return temperature;
+        }
     }
 
     long getNewNow() {

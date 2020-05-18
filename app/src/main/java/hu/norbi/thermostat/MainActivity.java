@@ -5,9 +5,11 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,6 +28,7 @@ import hu.norbi.thermostat.helper.ChartHelper;
 import hu.norbi.thermostat.helper.HttpManager;
 import hu.norbi.thermostat.helper.MainActivityViewModel;
 import hu.norbi.thermostat.helper.MqttHelper;
+import hu.norbi.thermostat.helper.OnSwipeTouchListener;
 import hu.norbi.thermostat.helper.RequestPackage;
 import hu.norbi.thermostat.helper.ThermostatMqttCallbackExtended;
 
@@ -45,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     @SuppressWarnings("FieldCanBeLocal")
     private View currentTempLayout;
     public MainActivityViewModel mViewModel;
+    View baseLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         REFERENCE_TIMESTAMP = getResources().getInteger(R.integer.referenceTimestamp);
+        baseLayout = findViewById(R.id.baseLinearLayout);
         statusView = findViewById(R.id.statusView);
         currentTargetView = findViewById(R.id.targetTempView);
         currentTempView = findViewById(R.id.currentTempView);
@@ -62,36 +67,70 @@ public class MainActivity extends AppCompatActivity {
 
         mViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
 
-        currentTempLayout.setOnClickListener(v -> requestData());
-        mChart = new ChartHelper(getResources(), getApplicationContext(), chart);
         startMqtt();
+
+        baseLayout.setOnTouchListener(new OnSwipeTouchListener(getBaseContext()) {
+//            public void onSwipeTop() {
+//                Toast.makeText(MainActivity.this, "top", Toast.LENGTH_SHORT).show();
+//            }
+//            public void onSwipeRight() {
+//                Toast.makeText(MainActivity.this, "right", Toast.LENGTH_SHORT).show();
+//            }
+//            public void onSwipeLeft() {
+//                Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
+//            }
+            public void onSwipeBottom() {
+                Toast.makeText(MainActivity.this, R.string.toast_refreshing, Toast.LENGTH_SHORT).show();
+                requestChartData();
+                mqttHelper.requestMqttData();
+            }
+
+            @SuppressLint("ClickableViewAccessibility")
+            public boolean onTouch(View v, MotionEvent event) {
+                return gestureDetector.onTouchEvent(event);
+            }
+        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         Log.d("main", "RESUME");
+        if (null == mChart) {
+            mChart = new ChartHelper(getResources(), getApplicationContext(), chart);
+        } else {
+            Log.d("main", "Chart exists");
+//            mChart.reset();
+//            requestChartData();
+        }
+
         if (mViewModel.getTempRecords().isEmpty()) {
             Log.d("main", "No temperature records in cache -> load from server");
-            requestData();
+            requestChartData();
         } else {
             long max = mViewModel.getTempRecords().stream().mapToLong(tempRec -> tempRec.newTimestamp).max().orElse(0L);
+            Log.d("main", "TempRecords count: " + mViewModel.getTempRecords().size() + " max: " + max);
             if ((max + REFERENCE_TIMESTAMP)+300 < System.currentTimeMillis()/1000L) {    // if the last data older than 5 minutes
                 Log.d("main", "Newest temperature record in cache too old -> load from server");
-                requestData();
+                requestChartData();
             } else {
                 Log.d("main", "Newest temperature record in cache is fresh enough  -> move chart to current time");
+                if (null == chart.getData() || 0 == chart.getData().getDataSetCount()) {
+                    mViewModel.getTempRecords().forEach(tempRecord -> mChart.addEntry(tempRecord.getRoomId(), tempRecord.getSensor(), tempRecord.getNewTimestamp(), tempRecord.getTemperature()));
+                }
                 mChart.moveToCurrent();
             }
         }
     }
+
+
 
     private void startMqtt(){
         mqttHelper = new MqttHelper(getApplicationContext());
         mqttHelper.setCallback(new ThermostatMqttCallbackExtended(this));
     }
 
-    public void requestData() {
+    public void requestChartData() {
         RequestPackage requestPackage = new RequestPackage();
         requestPackage.setMethod("GET");
         requestPackage.setUrl("http://192.168.0.222/MyWeb/thermostat/index.php/home/getTempLast30Min/1");
@@ -108,9 +147,9 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("StaticFieldLeak")
     private class Downloader extends AsyncTask<RequestPackage, String, String> {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-//        OffsetDateTime odt = OffsetDateTime.now( ZoneId.of("+02") );
+//        OffsetDateTime odt = OffsetDateTime.now(ZoneId.systemDefault() );
 //        ZoneOffset zoneOffset = odt.getOffset();
-        ZoneOffset zoneOffset = ZoneOffset.of("+02");
+        ZoneOffset zoneOffset = ZoneOffset.of("+02");   // measured temperatures only valid in this timezone
 
         @Override
         protected String doInBackground(RequestPackage... params) {

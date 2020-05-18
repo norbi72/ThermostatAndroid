@@ -16,15 +16,15 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import java.nio.charset.StandardCharsets;
 
 public class MqttHelper {
-    public MqttAndroidClient mqttAndroidClient;
+    private MqttAndroidClient mqttAndroidClient;
 
-    final String serverUri = "tcp://192.168.0.111:1883";
+    private final String serverUri = "tcp://192.168.0.111:1883";
 
-    final String clientId = "norbi_android";
-    final String subscriptionTopic = "thermostat/state/+";
+    private final String clientId = "norbi_android";
+    private final String subscriptionTopic = "thermostat/state/+";
 
-    final String username = "norbi";
-    final String password = "aA112233";
+    private final String username = "norbi";
+    private final String password = "aA112233";
 
     public MqttHelper(Context context){
         mqttAndroidClient = new MqttAndroidClient(context, serverUri, clientId);
@@ -40,7 +40,7 @@ public class MqttHelper {
             }
 
             @Override
-            public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
+            public void messageArrived(String topic, MqttMessage mqttMessage) {
                 Log.w("mqtt", mqttMessage.toString());
             }
 
@@ -111,8 +111,9 @@ public class MqttHelper {
         }
     }
 
-    public void sendMessage(String topic, String payload) {
-        byte[] encodedPayload = new byte[0];
+    @SuppressWarnings("SameParameterValue")
+    private void sendMessage(String topic, String payload) {
+        byte[] encodedPayload;
         try {
             encodedPayload = payload.getBytes(StandardCharsets.UTF_8);
             MqttMessage message = new MqttMessage(encodedPayload);
@@ -120,5 +121,13 @@ public class MqttHelper {
         } catch (MqttException e) {
             e.printStackTrace();
         }
+    }
+
+    public void requestMqttData() {
+        this.sendMessage("thermostat/state/cmd", "{\"get\":\"uptime\"}");
+        this.sendMessage("thermostat/state/cmd", "{\"get\":\"currentTarget\"}");
+        this.sendMessage("thermostat/state/cmd", "{\"get\":\"reference\"}");
+        this.sendMessage("thermostat/state/cmd", "{\"get\":\"icon\"}");
+        this.sendMessage("thermostat/state/cmd", "{\"get\":\"power\"}");
     }
 }

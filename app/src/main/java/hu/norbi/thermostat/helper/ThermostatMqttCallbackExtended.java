@@ -90,11 +90,7 @@ public class ThermostatMqttCallbackExtended implements MqttCallbackExtended {
         Log.w("mqtt","Connected " + b + " - " + s);
         if (null == mainActivity.mViewModel.getUptime() || mainActivity.mViewModel.getLastChangeTime()+5*60 < mainActivity.mViewModel.getNewNow()) {
             Log.d("mqtt", "Last change is too old, requests new MQTT data");
-            mainActivity.mqttHelper.sendMessage("thermostat/state/cmd", "{\"get\":\"uptime\"}");
-            mainActivity.mqttHelper.sendMessage("thermostat/state/cmd", "{\"get\":\"currentTarget\"}");
-            mainActivity.mqttHelper.sendMessage("thermostat/state/cmd", "{\"get\":\"reference\"}");
-            mainActivity.mqttHelper.sendMessage("thermostat/state/cmd", "{\"get\":\"icon\"}");
-            mainActivity.mqttHelper.sendMessage("thermostat/state/cmd", "{\"get\":\"power\"}");
+            mainActivity.mqttHelper.requestMqttData();
         }
     }
 
@@ -126,7 +122,7 @@ public class ThermostatMqttCallbackExtended implements MqttCallbackExtended {
             if (msg.contains("reference temp changed to ")) {
                 writeCurrent(msg.substring(msg.indexOf("reference temp changed to ")+26));
             } else if (msg.contains("Screen refresh at")) {
-                mainActivity.requestData();
+                mainActivity.requestChartData();
             } else {
                 if (msg.contains("icon changed to ")) {
                     int txtpos = msg.indexOf("icon changed to ");

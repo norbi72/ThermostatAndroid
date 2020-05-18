@@ -135,7 +135,6 @@ public class ChartHelper implements OnChartValueSelectedListener {
         lineDataSets.clear();
 
         mChart.invalidate();
-
         mChart.notifyDataSetChanged();
     }
 
@@ -193,8 +192,9 @@ public class ChartHelper implements OnChartValueSelectedListener {
     public void moveToCurrent() {
         final long now = System.currentTimeMillis();
         final long newNow = now / 1000L - REFERENCE_TIMESTAMP;
+        Log.d("chart", "moveToCurrent " + newNow + ": " + mChart.getData().getYMax());
         mChart.moveViewTo(newNow, mChart.getData().getYMax(), YAxis.AxisDependency.LEFT);
-//            mChart.setVisibleXRange(20*60, 35*60);
+//        mChart.setVisibleXRange(20*60, 35*60);
         mChart.getXAxis().setAxisMaximum(newNow + 5*60);
     }
 
