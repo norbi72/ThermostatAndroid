@@ -11,4 +11,6 @@
     <string name="chart_no_data">Kis türelmet…</string>
     <string name="chart_description">Mért hőmérsékletek az elmúlt 30 percben</string>
     <string name="toast_refreshing">Frissítés…</string>
+    <string name="title_home">Grafikon</string>
+    <string name="title_settings">Beállítások</string>
 </resources>

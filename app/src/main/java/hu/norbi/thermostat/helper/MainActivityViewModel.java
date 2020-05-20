@@ -5,12 +5,14 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import hu.norbi.thermostat.R;
 
-public class MainActivityViewModel extends AndroidViewModel {
+public class MainActivityViewModel extends AndroidViewModel implements Serializable {
 
     private final long REFERENCE_TIMESTAMP;
     private long lastChangeTime;
@@ -24,36 +26,6 @@ public class MainActivityViewModel extends AndroidViewModel {
     public MainActivityViewModel(@NonNull Application application) {
         super(application);
         REFERENCE_TIMESTAMP = application.getResources().getInteger(R.integer.referenceTimestamp);
-    }
-
-    public static class TempRecord {
-        int roomId;
-        int sensor;
-        public long newTimestamp;
-        float temperature;
-
-        public TempRecord(int roomId, int sensor, long newTimestamp, float temperature) {
-            this.roomId = roomId;
-            this.sensor = sensor;
-            this.newTimestamp = newTimestamp;
-            this.temperature = temperature;
-        }
-
-        public int getRoomId() {
-            return roomId;
-        }
-
-        public int getSensor() {
-            return sensor;
-        }
-
-        public long getNewTimestamp() {
-            return newTimestamp;
-        }
-
-        public float getTemperature() {
-            return temperature;
-        }
     }
 
     long getNewNow() {
@@ -116,5 +88,24 @@ public class MainActivityViewModel extends AndroidViewModel {
     public void addTempRecord(TempRecord tempRecord) {
         this.tempRecords.add(tempRecord);
         this.lastChangeTime = getNewNow();
+    }
+
+    public void setTempRecords(ArrayList<TempRecord> tempRecords) {
+        this.tempRecords = tempRecords;
+    }
+
+    @Override
+    @NonNull
+    public String toString() {
+        return "MainActivityViewModel{" +
+                "REFERENCE_TIMESTAMP=" + REFERENCE_TIMESTAMP +
+                ", lastChangeTime=" + lastChangeTime +
+                ", targetTemp='" + targetTemp + '\'' +
+                ", currentTemp='" + currentTemp + '\'' +
+                ", icon='" + icon + '\'' +
+                ", uptime='" + uptime + '\'' +
+                ", state='" + state + '\'' +
+                ", tempRecords=[" + tempRecords.stream().map(TempRecord::toString).collect(Collectors.joining(", ")) + "]" +
+                '}';
     }
 }

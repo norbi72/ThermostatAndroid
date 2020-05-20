@@ -1,38 +1,37 @@
 package hu.norbi.thermostat;
 
 import android.annotation.SuppressLint;
-import android.os.AsyncTask;
+import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.github.mikephil.charting.charts.LineChart;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 import hu.norbi.thermostat.helper.ChartHelper;
-import hu.norbi.thermostat.helper.HttpManager;
 import hu.norbi.thermostat.helper.MainActivityViewModel;
 import hu.norbi.thermostat.helper.MqttHelper;
 import hu.norbi.thermostat.helper.OnSwipeTouchListener;
-import hu.norbi.thermostat.helper.RequestPackage;
 import hu.norbi.thermostat.helper.ThermostatMqttCallbackExtended;
+import hu.norbi.thermostat.ui.graph.ChartFragment;
+import hu.norbi.thermostat.ui.graph.SettingsFragment;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
+@TargetApi(Build.VERSION_CODES.O)
 public class MainActivity extends AppCompatActivity {
 
     public MqttHelper mqttHelper;
@@ -49,11 +48,15 @@ public class MainActivity extends AppCompatActivity {
     private View currentTempLayout;
     public MainActivityViewModel mViewModel;
     View baseLayout;
+    ChartFragment chartFragment;
+    private SettingsFragment settingsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // onAppStart and onRotate
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Log.d("main", "onCreate");
 
         REFERENCE_TIMESTAMP = getResources().getInteger(R.integer.referenceTimestamp);
         baseLayout = findViewById(R.id.baseLinearLayout);
@@ -63,9 +66,30 @@ public class MainActivity extends AppCompatActivity {
         statusIconView = findViewById(R.id.statusIconView);
         powerIconView = findViewById(R.id.powerIconView);
         currentTempLayout = findViewById(R.id.currentTempLayout);
-        chart = findViewById(R.id.chart);
 
-        mViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
+        Objects.requireNonNull(getSupportActionBar()).setLogo(R.drawable.ic_thermostat_24dp);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayUseLogoEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
+
+        mViewModel = new ViewModelProvider(this).get(MainActivityViewModel.class);
+
+        if (savedInstanceState == null) {
+            Log.d("main", "onCreate savedInstanceState is null");
+
+            chartFragment = ChartFragment.newInstance(this);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_placeholder, chartFragment)
+                    .commitNow();
+        } else {
+            Log.d("main", "onCreate savedInstanceState: " + savedInstanceState.toString());
+            if (savedInstanceState.getBoolean("chartVisible")) {
+                chartFragment = ChartFragment.newInstance(this);
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_placeholder, chartFragment)
+                        .commitNow();
+                chart = findViewById(R.id.chart);
+            }
+        }
 
         startMqtt();
 
@@ -96,34 +120,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Log.d("main", "RESUME");
-        if (null == mChart) {
-            mChart = new ChartHelper(getResources(), getApplicationContext(), chart);
-        } else {
-            Log.d("main", "Chart exists");
-//            mChart.reset();
-//            requestChartData();
-        }
-
-        if (mViewModel.getTempRecords().isEmpty()) {
-            Log.d("main", "No temperature records in cache -> load from server");
-            requestChartData();
-        } else {
-            long max = mViewModel.getTempRecords().stream().mapToLong(tempRec -> tempRec.newTimestamp).max().orElse(0L);
-            Log.d("main", "TempRecords count: " + mViewModel.getTempRecords().size() + " max: " + max);
-            if ((max + REFERENCE_TIMESTAMP)+300 < System.currentTimeMillis()/1000L) {    // if the last data older than 5 minutes
-                Log.d("main", "Newest temperature record in cache too old -> load from server");
-                requestChartData();
-            } else {
-                Log.d("main", "Newest temperature record in cache is fresh enough  -> move chart to current time");
-                if (null == chart.getData() || 0 == chart.getData().getDataSetCount()) {
-                    mViewModel.getTempRecords().forEach(tempRecord -> mChart.addEntry(tempRecord.getRoomId(), tempRecord.getSensor(), tempRecord.getNewTimestamp(), tempRecord.getTemperature()));
-                }
-                mChart.moveToCurrent();
-            }
-        }
     }
 
-
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.bottom_nav_menu, menu);
+        return true;
+    }
 
     private void startMqtt(){
         mqttHelper = new MqttHelper(getApplicationContext());
@@ -131,61 +134,34 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void requestChartData() {
-        RequestPackage requestPackage = new RequestPackage();
-        requestPackage.setMethod("GET");
-        requestPackage.setUrl("http://192.168.0.222/MyWeb/thermostat/index.php/home/getTempLast30Min/1");
-
-//        Log.d("httpRequest", Objects.requireNonNull(HttpManager.getData(requestPackage)));
-
-        Downloader downloader = new Downloader(); //Instantiation of the Async task
-        //that’s defined below
-
-        downloader.execute(requestPackage);
-    }
-
-
-    @SuppressLint("StaticFieldLeak")
-    private class Downloader extends AsyncTask<RequestPackage, String, String> {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-//        OffsetDateTime odt = OffsetDateTime.now(ZoneId.systemDefault() );
-//        ZoneOffset zoneOffset = odt.getOffset();
-        ZoneOffset zoneOffset = ZoneOffset.of("+02");   // measured temperatures only valid in this timezone
-
-        @Override
-        protected String doInBackground(RequestPackage... params) {
-            return HttpManager.getData(params[0]);
-        }
-
-        //The String that is returned in the doInBackground() method is sent to the
-        // onPostExecute() method below. The String should contain JSON data.
-        @Override
-        protected void onPostExecute(String result) {
-            if (result.isEmpty()) {
-                return;
-            }
-
-            mChart.reset();
-            mViewModel.getTempRecords().clear();
-            try {
-                for (String line: result.split("\n")) {
-                    Log.d("httpRequest", line);
-
-                    final JSONObject jsonObject = new JSONObject(line);
-                    final int roomId = jsonObject.getInt("roomId");
-                    final int sensor = jsonObject.getInt("sensor");
-                    final float temperature = (float) jsonObject.getDouble("temp");
-                    // final int humidity = jsonObject.getInt("humi");
-                    final String date = jsonObject.getString("time");
-
-                    final long newTimestamp = LocalDateTime.parse(date, formatter).toEpochSecond(zoneOffset) - REFERENCE_TIMESTAMP;
-                    mChart.addEntry(roomId, sensor, newTimestamp, temperature);
-                    MainActivityViewModel.TempRecord tempRecord = new MainActivityViewModel.TempRecord(roomId, sensor, newTimestamp, temperature);
-                    mViewModel.addTempRecord(tempRecord);
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+        if (null != chartFragment) {
+            chartFragment.requestChartData();
         }
     }
 
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("chartVisible", true);
+    }
+
+    public void switchToChart(MenuItem item) {
+        chartFragment = ChartFragment.newInstance(this);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_placeholder, chartFragment)
+                .commitNow();
+    }
+
+    public void switchToSettings(MenuItem item) {
+        settingsFragment = SettingsFragment.newInstance(this);
+        if (null != findViewById(R.id.fragment_placeholder)) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_placeholder, settingsFragment)
+                    .commitNow();
+        } else {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.chart_fragment, settingsFragment)
+                    .commitNow();
+        }
+    }
 }

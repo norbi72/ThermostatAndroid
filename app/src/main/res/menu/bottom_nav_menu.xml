@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/navigation_home"
+        android:checkable="false"
+        android:icon="@drawable/ic_graph"
+        android:onClick="switchToChart"
+        android:title="@string/title_home"
+        android:visible="true"
+        app:showAsAction="ifRoom|withText" />
+
+    <item
+        android:id="@+id/navigation_settings"
+        android:enabled="true"
+        android:icon="@drawable/ic_settings"
+        android:onClick="switchToSettings"
+        android:title="@string/title_settings"
+        android:visible="true"
+        app:showAsAction="ifRoom|withText" />
+
+</menu>

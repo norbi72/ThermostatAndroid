@@ -14,4 +14,6 @@
     <string name="temperature_1d" translatable="false"><xliff:g id="temperature_celsius">%1$2.1f</xliff:g> °C</string>
     <string name="temperature_2d" translatable="false"><xliff:g id="temperature_celsius">%1$2.2f</xliff:g> °C</string>
     <string name="toast_refreshing">Refreshing…</string>
+    <string name="title_home">Graph</string>
+    <string name="title_settings">Settings</string>
 </resources>

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
+import org.eclipse.paho.android.service.MqttTraceHandler;
 import org.eclipse.paho.client.mqttv3.DisconnectedBufferOptions;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
@@ -15,18 +16,27 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.nio.charset.StandardCharsets;
 
+import hu.norbi.thermostat.R;
+
 public class MqttHelper {
     private MqttAndroidClient mqttAndroidClient;
 
-    private final String serverUri = "tcp://192.168.0.111:1883";
+    private final String serverUri;
 
-    private final String clientId = "norbi_android";
-    private final String subscriptionTopic = "thermostat/state/+";
+    @SuppressWarnings("FieldCanBeLocal")
+    private final String clientId;
+    private final String subscriptionTopic;
 
-    private final String username = "norbi";
-    private final String password = "aA112233";
+    private final String username;
+    private final String password;
 
     public MqttHelper(Context context){
+        serverUri = context.getString(R.string.mqtt_server_url);
+        clientId = context.getString(R.string.mqtt_client_id);
+        subscriptionTopic = context.getString(R.string.mqtt_subscription_topic);
+        username = context.getString(R.string.mqtt_username);
+        password = context.getString(R.string.mqrr_password);
+
         mqttAndroidClient = new MqttAndroidClient(context, serverUri, clientId);
         mqttAndroidClient.setCallback(new MqttCallbackExtended() {
             @Override
@@ -80,7 +90,7 @@ public class MqttHelper {
 
                 @Override
                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-                    Log.w("mqtt", "Failed to connect to: " + serverUri + exception.toString());
+                    Log.w("mqtt", "Failed to connect to: " + serverUri + " - " + exception.toString());
                 }
             });
 
