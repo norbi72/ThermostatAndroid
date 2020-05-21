@@ -38,6 +38,9 @@ public class ChartFragment extends Fragment {
     private ChartHelper mChart;
     private long REFERENCE_TIMESTAMP;
 
+    public ChartFragment() {
+    }
+
     private ChartFragment(long reference_timestamp, MainActivity mainActivity) {
         REFERENCE_TIMESTAMP = reference_timestamp;
         this.mainActivity = mainActivity;
@@ -85,18 +88,22 @@ public class ChartFragment extends Fragment {
         return inflater.inflate(R.layout.chart_fragment, container, false);
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        // onAppStart and onRotate
-        super.onActivityCreated(savedInstanceState);
-        Log.d("chartFragment", "Activity created");
-        mViewModel = new ViewModelProvider(this).get(MainActivityViewModel.class);
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        Log.d("chartFragment", "View created");
+        mViewModel = new ViewModelProvider(requireActivity()).get(MainActivityViewModel.class);
 
         chart = mainActivity.findViewById(R.id.chart);
         System.out.println("CHART " + chart);
-
-
     }
+
+//    @Override
+//    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+//        // onAppStart and onRotate
+//        super.onActivityCreated(savedInstanceState);
+//        Log.d("chartFragment", "Activity created");
+//        mViewModel = new ViewModelProvider(this).get(MainActivityViewModel.class);
+//    }
 
     public void requestChartData() {
         RequestPackage requestPackage = new RequestPackage();

@@ -17,13 +17,16 @@ buildscript {
 }
 
 allprojects {
+    configurations.all {
+        resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+    }
+
     repositories {
         google()
         jcenter()
-        maven {
-            url "https://repo.eclipse.org/content/repositories/paho-releases/"
-        }
+        maven { url "https://repo.eclipse.org/content/repositories/paho-releases/" }
         maven { url "https://jitpack.io" }
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
     }
 }
 

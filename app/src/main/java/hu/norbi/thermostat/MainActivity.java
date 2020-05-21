@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     View baseLayout;
     ChartFragment chartFragment;
     private SettingsFragment settingsFragment;
+    private boolean chartVisible = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,12 +83,18 @@ public class MainActivity extends AppCompatActivity {
                     .commitNow();
         } else {
             Log.d("main", "onCreate savedInstanceState: " + savedInstanceState.toString());
-            if (savedInstanceState.getBoolean("chartVisible")) {
+            this.chartVisible = savedInstanceState.getBoolean("chartVisible");
+            if (this.chartVisible) {
                 chartFragment = ChartFragment.newInstance(this);
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_placeholder, chartFragment)
                         .commitNow();
                 chart = findViewById(R.id.chart);
+            } else {
+                settingsFragment = SettingsFragment.newInstance(this);
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_placeholder, settingsFragment)
+                        .commitNow();
             }
         }
 
@@ -142,14 +149,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean("chartVisible", true);
+        outState.putBoolean("chartVisible", chartVisible);
     }
 
     public void switchToChart(MenuItem item) {
         chartFragment = ChartFragment.newInstance(this);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_placeholder, chartFragment)
-                .commitNow();
+        if (null != findViewById(R.id.fragment_placeholder)) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_placeholder, chartFragment)
+                    .commitNow();
+        } else {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.settings_fragment, chartFragment)
+                    .commitNow();
+        }
+        chartVisible = true;
     }
 
     public void switchToSettings(MenuItem item) {
@@ -163,5 +177,6 @@ public class MainActivity extends AppCompatActivity {
                     .replace(R.id.chart_fragment, settingsFragment)
                     .commitNow();
         }
+        chartVisible = false;
     }
 }

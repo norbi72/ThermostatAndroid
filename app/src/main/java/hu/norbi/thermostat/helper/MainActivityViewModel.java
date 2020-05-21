@@ -8,7 +8,6 @@ import androidx.lifecycle.AndroidViewModel;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import hu.norbi.thermostat.R;
 
@@ -22,6 +21,7 @@ public class MainActivityViewModel extends AndroidViewModel implements Serializa
     private String uptime;
     private String state;
     private List<TempRecord> tempRecords = new ArrayList<>();
+    private List<Integer> sliderPositions = new ArrayList<>();
 
     public MainActivityViewModel(@NonNull Application application) {
         super(application);
@@ -94,6 +94,25 @@ public class MainActivityViewModel extends AndroidViewModel implements Serializa
         this.tempRecords = tempRecords;
     }
 
+    public void setSliderPositions(int value, int value1, int value2) {
+        this.sliderPositions.clear();
+        this.sliderPositions.add(value);
+        this.sliderPositions.add(value1);
+        this.sliderPositions.add(value2);
+    }
+
+    public List<Integer> getSliderPositions() {
+        return sliderPositions;
+    }
+
+    public void setSliderPosition(int slider, int value) {
+        this.sliderPositions.set(slider, value);
+    }
+
+    public Integer getSliderPosition(int slider) {
+        return sliderPositions.get(slider);
+    }
+
     @Override
     @NonNull
     public String toString() {
@@ -105,7 +124,8 @@ public class MainActivityViewModel extends AndroidViewModel implements Serializa
                 ", icon='" + icon + '\'' +
                 ", uptime='" + uptime + '\'' +
                 ", state='" + state + '\'' +
-                ", tempRecords=[" + tempRecords.stream().map(TempRecord::toString).collect(Collectors.joining(", ")) + "]" +
+                ", tempRecords=" + tempRecords +
+                ", sliderPositions=" + sliderPositions +
                 '}';
     }
 }
