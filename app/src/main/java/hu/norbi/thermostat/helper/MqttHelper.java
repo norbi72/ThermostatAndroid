@@ -140,4 +140,14 @@ public class MqttHelper {
         this.sendMessage("thermostat/state/cmd", "{\"get\":\"icon\"}");
         this.sendMessage("thermostat/state/cmd", "{\"get\":\"power\"}");
     }
+
+    // {"target":[[19.5,20.9,20.5],[21.5,21.5,20.5]]}
+    public void requestTargetTemperatures() {
+        this.sendMessage("thermostat/state/cmd", "{\"get\":\"target\"}");
+    }
+
+    // {"times":["5:45","17:30","22:45"]}
+    public void requestTimes() {
+        this.sendMessage("thermostat/state/cmd", "{\"get\":\"times\"}");
+    }
 }

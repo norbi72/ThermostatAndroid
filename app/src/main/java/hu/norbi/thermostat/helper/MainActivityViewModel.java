@@ -22,6 +22,7 @@ public class MainActivityViewModel extends AndroidViewModel implements Serializa
     private String state;
     private List<TempRecord> tempRecords = new ArrayList<>();
     private List<Integer> sliderPositions = new ArrayList<>();
+    private List<Double> targetTemperatures = new ArrayList<>();
 
     public MainActivityViewModel(@NonNull Application application) {
         super(application);
@@ -113,6 +114,14 @@ public class MainActivityViewModel extends AndroidViewModel implements Serializa
         return sliderPositions.get(slider);
     }
 
+    public List<Double> getTargetTemperatures() {
+        return targetTemperatures;
+    }
+
+    public void setTargetTemperatures(List<Double> targetTemperatures) {
+        this.targetTemperatures = targetTemperatures;
+    }
+
     @Override
     @NonNull
     public String toString() {
@@ -126,6 +135,7 @@ public class MainActivityViewModel extends AndroidViewModel implements Serializa
                 ", state='" + state + '\'' +
                 ", tempRecords=" + tempRecords +
                 ", sliderPositions=" + sliderPositions +
+                ", targetTemperatures=" + targetTemperatures +
                 '}';
     }
 }

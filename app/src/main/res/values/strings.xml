@@ -16,4 +16,16 @@
     <string name="toast_refreshing">Refreshing…</string>
     <string name="title_home">Graph</string>
     <string name="title_settings">Settings</string>
+    <string name="label_day_periods">Day periods</string>
+    <string name="label_weekend">Weekend</string>
+    <string name="label_weekday">Weekday</string>
+    <string name="description_tv_time">TV time</string>
+    <string name="description_daytime">Daytime</string>
+    <string name="description_nighttime">Nighttime</string>
+    <string name="description_day_time">Day time</string>
+    <string name="description_night_time">Night time</string>
+    <string name="hint_end">End</string>
+    <string name="hint_start">Start</string>
+    <string name="label_target_temperatures">Target temperatures</string>
+    <string name="save_settings">Save settings</string>
 </resources>

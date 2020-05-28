@@ -9,15 +9,24 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:orientation="vertical">
+        android:layout_marginEnd="10dp"
+        android:orientation="vertical"
+        android:scrollIndicators="right"
+        android:scrollbarStyle="insideInset"
+        android:scrollbars="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Day periods" />
+            android:text="@string/label_day_periods"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <io.apptik.widget.MultiSlider
             android:id="@+id/range_slider5"
@@ -25,13 +34,13 @@
             android:layout_height="wrap_content"
 
 
+            android:layout_marginVertical="10dp"
             android:layout_marginStart="62dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginVertical="10dp"
             app:drawThumbsApart="true"
 
             app:stepsThumbsApart="5"
-            app:thumbNumber="5" />
+            app:thumbNumber="4" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -41,17 +50,20 @@
             <ImageView
                 android:layout_width="52dp"
                 android:layout_height="match_parent"
-                android:contentDescription="Night time"
+                android:background="@color/primaryDarkColor"
+                android:contentDescription="@string/description_night_time"
                 app:srcCompat="@drawable/ic_moon" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Start"
+                android:enabled="false"
+                android:hint="@string/hint_start"
                 app:hintEnabled="true">
 
-                <EditText
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/nightStartEdit"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:ems="10"
@@ -62,18 +74,21 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="-" />
+                android:text="\u2014" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="End"
+                android:enabled="false"
+                android:hint="@string/hint_end"
                 app:hintEnabled="true">
 
-                <EditText
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/nightEndEdit"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:editable="false"
                     android:ems="10"
                     android:inputType="time" />
 
@@ -84,24 +99,28 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingTop="10dp" >
+            android:paddingTop="10dp">
 
             <ImageView
                 android:layout_width="52dp"
                 android:layout_height="match_parent"
-                android:contentDescription="Day time"
+                android:background="@color/primaryDarkColor"
+                android:contentDescription="@string/description_day_time"
                 app:srcCompat="@drawable/ic_sun" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Start"
+                android:enabled="false"
+                android:hint="@string/hint_start"
                 app:hintEnabled="true">
 
-                <EditText
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/dayStartEdit"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:editable="false"
                     android:ems="10"
                     android:inputType="time" />
 
@@ -110,18 +129,21 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="-" />
+                android:text="\u2014" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="End"
+                android:enabled="false"
+                android:hint="@string/hint_end"
                 app:hintEnabled="true">
 
-                <EditText
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/dayEndEdit"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:editable="false"
                     android:ems="10"
                     android:inputType="time" />
 
@@ -132,24 +154,28 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingTop="10dp" >
+            android:paddingTop="10dp">
 
             <ImageView
                 android:layout_width="52dp"
                 android:layout_height="match_parent"
-                android:contentDescription="TV time"
+                android:background="@color/primaryDarkColor"
+                android:contentDescription="@string/description_tv_time"
                 app:srcCompat="@drawable/ic_tv" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Start"
+                android:enabled="false"
+                android:hint="@string/hint_start"
                 app:hintEnabled="true">
 
-                <EditText
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/tvStartEdit"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:editable="false"
                     android:ems="10"
                     android:inputType="time" />
 
@@ -158,18 +184,21 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="-" />
+                android:text="\u2014" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="End"
+                android:enabled="false"
+                android:hint="@string/hint_end"
                 app:hintEnabled="true">
 
-                <EditText
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/tvEndEdit"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:editable="false"
                     android:ems="10"
                     android:inputType="time" />
 
@@ -180,41 +209,44 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:text="Target temperatures" />
+            android:text="@string/label_target_temperatures"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <Space
-                    android:layout_width="52dp" />
+                <Space android:layout_width="52dp" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_column="1"
                     android:layout_weight="1"
-                    app:hintEnabled="false"
-                    android:layout_column="1">
+                    app:hintEnabled="false">
+
                     <TextView
-                        android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
-                        android:text="Weekday"/>
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_weekday" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_column="1"
                     android:layout_weight="1"
-                    app:hintEnabled="false"
-                    android:layout_column="1">
+                    app:hintEnabled="false">
+
                     <TextView
-                        android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
-                        android:text="Weekend"/>
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_weekend" />
                 </com.google.android.material.textfield.TextInputLayout>
 
             </TableRow>
@@ -226,39 +258,43 @@
                 <ImageView
                     android:layout_width="52dp"
                     android:layout_height="match_parent"
-                    android:contentDescription="Nighttime"
-                    app:srcCompat="@drawable/ic_moon"
-                    />
+                    android:background="@color/primaryDarkColor"
+                    android:contentDescription="@string/description_nighttime"
+                    app:srcCompat="@drawable/ic_moon" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_column="1"
                     android:layout_weight="1"
-                    android:hint="°C"
-                    app:hintEnabled="true"
-                    android:layout_column="1">
+                    app:suffixText=" °C"
+                    app:suffixTextAppearance="@style/TextAppearance.AppCompat.Medium">
 
-                    <EditText
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/weekdayNightTempEdit"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:ems="10"
-                        android:inputType="numberDecimal" />
+                        android:inputType="numberDecimal"
+                        android:minEms="3"
+                        android:textAlignment="viewEnd" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_column="1"
                     android:layout_weight="1"
-                    android:hint="°C"
-                    app:hintEnabled="true"
-                    android:layout_column="1">
+                    app:suffixText=" °C"
+                    app:suffixTextAppearance="@style/TextAppearance.AppCompat.Medium">
 
-                    <EditText
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/weekendNightTempEdit"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:ems="10"
-                        android:inputType="numberDecimal" />
+                        android:inputType="numberDecimal"
+                        android:minEms="3"
+                        android:textAlignment="viewEnd" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -271,42 +307,48 @@
                 <ImageView
                     android:layout_width="52dp"
                     android:layout_height="match_parent"
-                    android:contentDescription="Daytime"
+                    android:background="@color/primaryDarkColor"
+                    android:contentDescription="@string/description_daytime"
                     app:srcCompat="@drawable/ic_sun" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_column="1"
                     android:layout_weight="1"
-                    android:hint="°C"
-                    app:hintEnabled="true"
-                    android:layout_column="1">
+                    app:suffixText=" °C"
+                    app:suffixTextAppearance="@style/TextAppearance.AppCompat.Medium">
 
-                    <EditText
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/weekdayDayTempEdit"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:ems="10"
-                        android:inputType="numberDecimal" />
+                        android:inputType="numberDecimal"
+                        android:minEms="3"
+                        android:textAlignment="viewEnd" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_column="1"
                     android:layout_weight="1"
-                    android:hint="°C"
-                    app:hintEnabled="true"
-                    android:layout_column="1">
+                    app:suffixText=" °C"
+                    app:suffixTextAppearance="@style/TextAppearance.AppCompat.Medium">
 
-                    <EditText
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/weekendDayTempEdit"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:ems="10"
-                        android:inputType="numberDecimal" />
+                        android:inputType="numberDecimal"
+                        android:minEms="3"
+                        android:textAlignment="viewEnd" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
             </TableRow>
+
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -314,38 +356,43 @@
                 <ImageView
                     android:layout_width="52dp"
                     android:layout_height="match_parent"
-                    android:contentDescription="TV time"
+                    android:background="@color/primaryDarkColor"
+                    android:contentDescription="@string/description_tv_time"
                     app:srcCompat="@drawable/ic_tv" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_column="1"
                     android:layout_weight="1"
-                    android:hint="°C"
-                    app:hintEnabled="true"
-                    android:layout_column="1">
+                    app:suffixText=" °C"
+                    app:suffixTextAppearance="@style/TextAppearance.AppCompat.Medium">
 
-                    <EditText
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/weekdayTvTempEdit"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:ems="10"
-                        android:inputType="numberDecimal" />
+                        android:inputType="numberDecimal"
+                        android:minEms="3"
+                        android:textAlignment="viewEnd" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_column="1"
                     android:layout_weight="1"
-                    android:hint="°C"
-                    app:hintEnabled="true"
-                    android:layout_column="1">
+                    app:suffixText=" °C"
+                    app:suffixTextAppearance="@style/TextAppearance.AppCompat.Medium">
 
-                    <EditText
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/weekendTvTempEdit"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:ems="10"
-                        android:inputType="numberDecimal" />
+                        android:inputType="numberDecimal"
+                        android:minEms="3"
+                        android:textAlignment="viewEnd" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -353,6 +400,15 @@
 
         </TableLayout>
 
+        <Button
+            android:id="@+id/btnSave"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:drawableStart="@android:drawable/ic_menu_save"
+            android:text="@string/save_settings"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 

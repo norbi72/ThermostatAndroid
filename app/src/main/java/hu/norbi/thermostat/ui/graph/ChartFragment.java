@@ -56,7 +56,7 @@ public class ChartFragment extends Fragment {
         Log.d("chartFragment", "Activity view resumed");
 
         if (null == mChart) {
-            Log.d("main", "Create new chart");
+            Log.d("chartFragment", "Create new chart");
             mChart = new ChartHelper(getResources(), mainActivity.getApplicationContext(), chart);
         }
 

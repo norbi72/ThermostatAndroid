@@ -11,6 +11,10 @@ import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import hu.norbi.thermostat.MainActivity;
 import hu.norbi.thermostat.R;
 
@@ -20,6 +24,10 @@ public class ThermostatMqttCallbackExtended implements MqttCallbackExtended {
     final private String uptimeFormat;
     final private String temperatureFormat1D;
     final private String temperatureFormat2D;
+
+    public List<Double> targetTempsWeekday = new ArrayList<>(3);
+    public List<Double> targetTempsWeekend = new ArrayList<>(3);
+    public List<String> times = new ArrayList<>(3);
 
     public ThermostatMqttCallbackExtended(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
@@ -85,6 +93,69 @@ public class ThermostatMqttCallbackExtended implements MqttCallbackExtended {
         mainActivity.mViewModel.setState(state);
     }
 
+    // [[19.5,20.9,20.5],[21.5,21.5,20.5]]
+    private void setTargetTemps(String targetTempsJsonArray) {
+        final String targetTempsList2 = targetTempsJsonArray.substring(2, targetTempsJsonArray.length()-2);
+        final String[] targetWeekWeekend = targetTempsList2.split("],\\[");
+        final String[] targetsWeekday = targetWeekWeekend[0].split(",");
+        final String[] targetsWeekend = targetWeekWeekend[1].split(",");
+
+        for (int i = 0; i < 3; i++) {
+            this.targetTempsWeekday.add(Double.valueOf(targetsWeekday[i]));
+            this.targetTempsWeekend.add(Double.valueOf(targetsWeekend[i]));
+        }
+
+        if (null != mainActivity.weekdayNightTempEdit && mainActivity.weekdayNightTempEdit.getText().toString().isEmpty()) {
+            mainActivity.weekdayNightTempEdit.setText(String.valueOf(targetTempsWeekday.get(0)));
+            mainActivity.weekdayDayTempEdit.setText(String.valueOf(targetTempsWeekday.get(1)));
+            mainActivity.weekdayTvTempEdit.setText(String.valueOf(targetTempsWeekday.get(2)));
+            mainActivity.weekendNightTempEdit.setText(String.valueOf(targetTempsWeekend.get(0)));
+            mainActivity.weekendDayTempEdit.setText(String.valueOf(targetTempsWeekend.get(1)));
+            mainActivity.weekendTvTempEdit.setText(String.valueOf(targetTempsWeekend.get(2)));
+        }
+
+        final List<Double> targetTemps = new ArrayList<>(6);
+        targetTemps.addAll(targetTempsWeekday);
+        targetTemps.addAll(targetTempsWeekend);
+        mainActivity.mViewModel.setTargetTemperatures(targetTemps);
+    }
+
+    private void setTimes(String timesJsonArray) {
+        final String[] timesArray3 = timesJsonArray.substring(1, timesJsonArray.length()-1).split(",");
+
+        this.times.clear();
+        Collections.addAll(this.times, timesArray3);
+
+        this.setTimesEditText(timesArray3);
+    }
+
+    public void setTimesEditText(final String[] timesArray3) {
+        if (null != mainActivity.dayStartEdit) {
+            final String dayStart = timesArray3[0].substring(1, timesArray3[0].length() - 1);
+            mainActivity.dayStartEdit.setText(dayStart);
+            mainActivity.nightEndEdit.setText(dayStart);
+
+            final String tvStart = timesArray3[1].substring(1, timesArray3[1].length() - 1);
+            mainActivity.dayEndEdit.setText(tvStart);
+            mainActivity.tvStartEdit.setText(tvStart);
+
+            final String nightStart = timesArray3[2].substring(1, timesArray3[2].length() - 1);
+            mainActivity.nightStartEdit.setText(nightStart);
+            mainActivity.tvEndEdit.setText(nightStart);
+
+            mainActivity.multiSlider.getThumb(0).setValue(timeToInt(dayStart));
+            mainActivity.multiSlider.getThumb(1).setValue(timeToInt(tvStart));
+            mainActivity.multiSlider.getThumb(2).setValue(timeToInt(nightStart));
+        }
+    }
+
+    private int timeToInt(String timeStr) {
+        final String[] timeParts = timeStr.split(":");
+        final int hour = Integer.parseInt(timeParts[0]);
+        final int minutes = Integer.parseInt(timeParts[1]);
+        return hour*60 + minutes;
+    }
+
     @Override
     public void connectComplete(boolean b, String s) {
         Log.w("mqtt","Connected " + b + " - " + s);
@@ -117,6 +188,10 @@ public class ThermostatMqttCallbackExtended implements MqttCallbackExtended {
                 changeIcon(msg.substring(msg.indexOf("\"icon\":")+7, msg.length()-1));
             } else if (msg.contains("\"power\":")) {
                 setPower(msg.substring(msg.indexOf("\"power\":")+9, msg.length()-2));
+            } else if (msg.contains("\"target\":")) {
+                setTargetTemps(msg.substring(msg.indexOf("\"target\":")+9, msg.length()-1));
+            } else if (msg.contains("\"times\":")) {
+                setTimes(msg.substring(msg.indexOf("\"times\":")+8, msg.length()-1));
             }
         } else if (topic.endsWith("/screen")) {
             if (msg.contains("reference temp changed to ")) {

@@ -29,6 +29,7 @@ import hu.norbi.thermostat.helper.OnSwipeTouchListener;
 import hu.norbi.thermostat.helper.ThermostatMqttCallbackExtended;
 import hu.norbi.thermostat.ui.graph.ChartFragment;
 import hu.norbi.thermostat.ui.graph.SettingsFragment;
+import io.apptik.widget.MultiSlider;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 @TargetApi(Build.VERSION_CODES.O)
@@ -51,6 +52,23 @@ public class MainActivity extends AppCompatActivity {
     ChartFragment chartFragment;
     private SettingsFragment settingsFragment;
     private boolean chartVisible = true;
+    public ThermostatMqttCallbackExtended thermostatMqttCallback;
+
+    public MultiSlider multiSlider;
+
+    public TextView nightStartEdit;
+    public TextView nightEndEdit;
+    public TextView dayStartEdit;
+    public TextView dayEndEdit;
+    public TextView tvStartEdit;
+    public TextView tvEndEdit;
+
+    public TextView weekdayNightTempEdit;
+    public TextView weekdayDayTempEdit;
+    public TextView weekdayTvTempEdit;
+    public TextView weekendNightTempEdit;
+    public TextView weekendDayTempEdit;
+    public TextView weekendTvTempEdit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
         powerIconView = findViewById(R.id.powerIconView);
         currentTempLayout = findViewById(R.id.currentTempLayout);
 
+        // Extra icon in ActionBar
         Objects.requireNonNull(getSupportActionBar()).setLogo(R.drawable.ic_thermostat_24dp);
         Objects.requireNonNull(getSupportActionBar()).setDisplayUseLogoEnabled(true);
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
@@ -75,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
         mViewModel = new ViewModelProvider(this).get(MainActivityViewModel.class);
 
         if (savedInstanceState == null) {
-            Log.d("main", "onCreate savedInstanceState is null");
+            Log.d("main", "onCreate savedInstanceState is null -> start with TempChart");
 
             chartFragment = ChartFragment.newInstance(this);
             getSupportFragmentManager().beginTransaction()
@@ -137,7 +156,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void startMqtt(){
         mqttHelper = new MqttHelper(getApplicationContext());
-        mqttHelper.setCallback(new ThermostatMqttCallbackExtended(this));
+        thermostatMqttCallback = new ThermostatMqttCallbackExtended(this);
+        mqttHelper.setCallback(thermostatMqttCallback);
     }
 
     public void requestChartData() {

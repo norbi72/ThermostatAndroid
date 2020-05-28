@@ -13,4 +13,16 @@
     <string name="toast_refreshing">Frissítés…</string>
     <string name="title_home">Grafikon</string>
     <string name="title_settings">Beállítások</string>
+    <string name="description_tv_time">TV idő</string>
+    <string name="description_daytime">Nappal</string>reference temp changed to
+    <string name="description_nighttime">Éjszaka</string>
+    <string name="description_day_time">Nappal</string>
+    <string name="description_night_time">Éjszaka</string>
+    <string name="hint_end">Vége</string>
+    <string name="hint_start">Eleje</string>
+    <string name="label_target_temperatures">Cél hőmérsékletek</string>
+    <string name="label_day_periods">Nap felosztása</string>
+    <string name="label_weekend">Hétvége</string>
+    <string name="label_weekday">Hétköznap</string>
+    <string name="save_settings">Beállítások mentése</string>
 </resources>
