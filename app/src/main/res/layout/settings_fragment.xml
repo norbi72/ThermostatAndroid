@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/settings_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:scrollbarStyle="insideInset"
+    android:scrollbars="vertical"
     tools:context=".ui.graph.SettingsFragment">
 
     <LinearLayout
@@ -15,7 +17,6 @@
         android:orientation="vertical"
         android:scrollIndicators="right"
         android:scrollbarStyle="insideInset"
-        android:scrollbars="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -50,6 +51,7 @@
             <ImageView
                 android:layout_width="52dp"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="10dp"
                 android:background="@color/primaryDarkColor"
                 android:contentDescription="@string/description_night_time"
                 app:srcCompat="@drawable/ic_moon" />
@@ -66,15 +68,17 @@
                     android:id="@+id/nightStartEdit"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:editable="false"
                     android:ems="10"
-                    android:inputType="time" />
+                    android:inputType="time"
+                    tools:ignore="Deprecated" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="\u2014" />
+                android:text="@string/dash" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="wrap_content"
@@ -90,7 +94,8 @@
                     android:layout_height="match_parent"
                     android:editable="false"
                     android:ems="10"
-                    android:inputType="time" />
+                    android:inputType="time"
+                    tools:ignore="Deprecated" />
 
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
@@ -98,12 +103,12 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingTop="10dp">
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="52dp"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="10dp"
                 android:background="@color/primaryDarkColor"
                 android:contentDescription="@string/description_day_time"
                 app:srcCompat="@drawable/ic_sun" />
@@ -122,14 +127,15 @@
                     android:layout_height="match_parent"
                     android:editable="false"
                     android:ems="10"
-                    android:inputType="time" />
+                    android:inputType="time"
+                    tools:ignore="Deprecated" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="\u2014" />
+                android:text="@string/dash" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="wrap_content"
@@ -145,7 +151,8 @@
                     android:layout_height="match_parent"
                     android:editable="false"
                     android:ems="10"
-                    android:inputType="time" />
+                    android:inputType="time"
+                    tools:ignore="Deprecated" />
 
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
@@ -153,12 +160,12 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingTop="10dp">
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="52dp"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="10dp"
                 android:background="@color/primaryDarkColor"
                 android:contentDescription="@string/description_tv_time"
                 app:srcCompat="@drawable/ic_tv" />
@@ -177,14 +184,15 @@
                     android:layout_height="match_parent"
                     android:editable="false"
                     android:ems="10"
-                    android:inputType="time" />
+                    android:inputType="time"
+                    tools:ignore="Deprecated" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="\u2014" />
+                android:text="@string/dash" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="wrap_content"
@@ -200,7 +208,8 @@
                     android:layout_height="match_parent"
                     android:editable="false"
                     android:ems="10"
-                    android:inputType="time" />
+                    android:inputType="time"
+                    tools:ignore="Deprecated" />
 
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
@@ -258,6 +267,7 @@
                 <ImageView
                     android:layout_width="52dp"
                     android:layout_height="match_parent"
+                    android:layout_marginEnd="10dp"
                     android:background="@color/primaryDarkColor"
                     android:contentDescription="@string/description_nighttime"
                     app:srcCompat="@drawable/ic_moon" />
@@ -307,6 +317,7 @@
                 <ImageView
                     android:layout_width="52dp"
                     android:layout_height="match_parent"
+                    android:layout_marginEnd="10dp"
                     android:background="@color/primaryDarkColor"
                     android:contentDescription="@string/description_daytime"
                     app:srcCompat="@drawable/ic_sun" />
@@ -356,6 +367,7 @@
                 <ImageView
                     android:layout_width="52dp"
                     android:layout_height="match_parent"
+                    android:layout_marginEnd="10dp"
                     android:background="@color/primaryDarkColor"
                     android:contentDescription="@string/description_tv_time"
                     app:srcCompat="@drawable/ic_tv" />
@@ -400,16 +412,35 @@
 
         </TableLayout>
 
-        <Button
-            android:id="@+id/btnSave"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:drawableStart="@android:drawable/ic_menu_save"
-            android:text="@string/save_settings"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:layout_height="wrap_content">
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/btnSave"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:layout_marginBottom="32dp"
+                android:background="@color/primaryLightColor"
+                android:drawableStart="@android:drawable/ic_menu_save"
+                android:paddingHorizontal="10dp"
+                android:text="@string/save_settings"
+                android:textColor="@color/primaryTextColor"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

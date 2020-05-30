@@ -28,4 +28,5 @@
     <string name="hint_start">Start</string>
     <string name="label_target_temperatures">Target temperatures</string>
     <string name="save_settings">Save settings</string>
+    <string name="dash" translatable="false">—</string>
 </resources>
