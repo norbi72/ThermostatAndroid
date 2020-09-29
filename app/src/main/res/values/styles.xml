@@ -12,4 +12,9 @@
 
     <style name="Widget.MultiSlider" parent="android:Widget">
     </style>
+
+    <style name="labelTransparent">
+        <item name="color">#00ff0000</item>
+        <item name="android:textSize">0.1sp</item>
+    </style>
 </resources>

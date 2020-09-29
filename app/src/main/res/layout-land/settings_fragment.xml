@@ -1,0 +1,519 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/settings_fragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbarStyle="insideInset"
+    android:scrollbars="vertical"
+    tools:context=".ui.graph.SettingsFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_marginEnd="10dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:baselineAligned="false">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_day_periods"
+                    android:textAlignment="center"
+                    android:textSize="18sp"
+                    android:textColor="@color/primaryDarkColor"
+                    android:textStyle="bold" />
+
+                <io.apptik.widget.MultiSlider
+                    android:id="@+id/range_slider5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+
+                    android:layout_marginVertical="10dp"
+                    android:layout_marginStart="62dp"
+                    android:layout_marginEnd="10dp"
+                    app:drawThumbsApart="true"
+
+                    app:stepsThumbsApart="5"
+                    app:thumbNumber="4" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="52dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="10dp"
+                        android:background="@color/transparent"
+                        android:contentDescription="@string/description_night_time"
+                        android:tint="@color/primaryDarkColor"
+                        android:tooltipText="@string/description_night_time"
+                        app:srcCompat="@drawable/ic_moon" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:enabled="false"
+                        android:hint="@string/hint_start"
+                        android:textColorHint="@color/primaryDarkColor"
+                        app:hintEnabled="true">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/nightStartEdit"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_horizontal|center_vertical"
+                            android:editable="false"
+                            android:ems="4"
+                            android:inputType="time"
+                            android:textColor="@color/primaryDarkColor"
+                            tools:ignore="Deprecated" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/primaryDarkColor"
+                        android:text="@string/dash" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:enabled="false"
+                        android:hint="@string/hint_end"
+                        android:textColorHint="@color/primaryDarkColor"
+                        app:hintEnabled="true">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/nightEndEdit"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_horizontal|center_vertical"
+                            android:editable="false"
+                            android:ems="4"
+                            android:inputType="time"
+                            android:textColor="@color/primaryDarkColor"
+                            tools:ignore="Deprecated" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="52dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="10dp"
+                        android:background="@color/transparent"
+                        android:contentDescription="@string/description_day_time"
+                        android:tint="@color/primaryDarkColor"
+                        android:tooltipText="@string/description_daytime"
+                        app:srcCompat="@drawable/ic_sun" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:enabled="false"
+                        android:hint="@string/hint_start"
+                        android:textColorHint="@color/primaryDarkColor"
+                        android:orientation="vertical"
+                        app:hintEnabled="true">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/dayStartEdit"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_horizontal|center_vertical"
+                            android:editable="false"
+                            android:ems="4"
+                            android:inputType="time"
+                            android:textColor="@color/primaryDarkColor"
+                            tools:ignore="Deprecated" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/primaryDarkColor"
+                        android:text="@string/dash" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:enabled="false"
+                        android:hint="@string/hint_end"
+                        android:textColorHint="@color/primaryDarkColor"
+                        app:hintEnabled="true">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/dayEndEdit"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_horizontal|center_vertical"
+                            android:editable="false"
+                            android:ems="4"
+                            android:inputType="time"
+                            android:textColor="@color/primaryDarkColor"
+                            tools:ignore="Deprecated" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="52dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="10dp"
+                        android:background="@color/transparent"
+                        android:contentDescription="@string/description_tv_time"
+                        android:tint="@color/primaryDarkColor"
+                        android:tooltipText="@string/description_tv_time"
+                        app:srcCompat="@drawable/ic_tv" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:enabled="false"
+                        android:hint="@string/hint_start"
+                        android:textColorHint="@color/primaryDarkColor"
+                        app:hintEnabled="true">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/tvStartEdit"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_horizontal|center_vertical"
+                            android:editable="false"
+                            android:ems="4"
+                            android:inputType="time"
+                            android:textColor="@color/primaryDarkColor"
+                            tools:ignore="Deprecated" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/primaryDarkColor"
+                        android:text="@string/dash" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:enabled="false"
+                        android:hint="@string/hint_end"
+                        android:textColorHint="@color/primaryDarkColor"
+                        app:hintEnabled="true">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/tvEndEdit"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_horizontal|center_vertical"
+                            android:editable="false"
+                            android:ems="4"
+                            android:inputType="time"
+                            android:textColor="@color/primaryDarkColor"
+                            tools:ignore="Deprecated" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_target_temperatures"
+                    android:textAlignment="center"
+                    android:textSize="18sp"
+                    android:textColor="@color/primaryDarkColor"
+                    android:textStyle="bold" />
+
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_column="1"
+                            android:layout_weight="1"
+                            app:hintEnabled="false">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="bottom|center_horizontal"
+                                android:textColor="@color/primaryDarkColor"
+                                android:text="@string/label_weekday" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_column="1"
+                            android:layout_weight="1"
+                            app:hintEnabled="false">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="bottom|center_horizontal"
+                                android:textColor="@color/primaryDarkColor"
+                                android:text="@string/label_weekend" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_column="1"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="1"
+                            android:hint="@string/weekday_night_target_temperature"
+                            app:hintTextAppearance="@style/labelTransparent"
+                            app:suffixText=" °C"
+                            app:suffixTextAppearance="@style/TextAppearance.AppCompat.Medium"
+                            app:suffixTextColor="@color/primaryDarkColor">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/weekdayNightTempEdit"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_horizontal|center_vertical"
+                                android:gravity="center_horizontal|end"
+                                android:inputType="numberDecimal"
+                                android:minEms="3"
+                                android:textAlignment="viewEnd"
+                                android:textColor="@color/primaryDarkColor" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_column="1"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="1"
+                            android:hint="@string/weekend_night_target_temperature"
+                            app:hintTextAppearance="@style/labelTransparent"
+                            app:suffixText=" °C"
+                            app:suffixTextAppearance="@style/TextAppearance.AppCompat.Medium"
+                            app:suffixTextColor="@color/primaryDarkColor">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/weekendNightTempEdit"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_horizontal|center_vertical"
+                                android:gravity="center_horizontal|end"
+                                android:inputType="numberDecimal"
+                                android:minEms="3"
+                                android:textAlignment="viewEnd"
+                                android:textColor="@color/primaryDarkColor" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_column="1"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="1"
+                            android:hint="@string/weekday_day_target_temperature"
+                            app:hintTextAppearance="@style/labelTransparent"
+                            app:suffixText=" °C"
+                            app:suffixTextAppearance="@style/TextAppearance.AppCompat.Medium"
+                            app:suffixTextColor="@color/primaryDarkColor">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/weekdayDayTempEdit"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_horizontal|center_vertical"
+                                android:gravity="center_horizontal|end"
+                                android:inputType="numberDecimal"
+                                android:minEms="3"
+                                android:textAlignment="viewEnd"
+                                android:textColor="@color/primaryDarkColor" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_column="1"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="1"
+                            android:hint="@string/weekend_day_target_temperature"
+                            app:hintTextAppearance="@style/labelTransparent"
+                            app:suffixText=" °C"
+                            app:suffixTextAppearance="@style/TextAppearance.AppCompat.Medium"
+                            app:suffixTextColor="@color/primaryDarkColor">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/weekendDayTempEdit"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_horizontal|center_vertical"
+                                android:gravity="center_horizontal|end"
+                                android:inputType="numberDecimal"
+                                android:minEms="3"
+                                android:textAlignment="viewEnd"
+                                android:textColor="@color/primaryDarkColor" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_column="1"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="1"
+                            android:hint="@string/weekday_tv_time_target_temperature"
+                            app:hintTextAppearance="@style/labelTransparent"
+                            app:suffixText=" °C"
+                            app:suffixTextAppearance="@style/TextAppearance.AppCompat.Medium"
+                            app:suffixTextColor="@color/primaryDarkColor">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/weekdayTvTempEdit"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_horizontal|center_vertical"
+                                android:gravity="center_horizontal|end"
+                                android:inputType="numberDecimal"
+                                android:minEms="3"
+                                android:textAlignment="viewEnd"
+                                android:textColor="@color/primaryDarkColor" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_column="1"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="1"
+                            android:hint="@string/weekend_tv_time_target_temperature"
+                            app:hintTextAppearance="@style/labelTransparent"
+                            app:suffixText=" °C"
+                            app:suffixTextAppearance="@style/TextAppearance.AppCompat.Medium"
+                            app:suffixTextColor="@color/primaryDarkColor">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/weekendTvTempEdit"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_horizontal|center_vertical"
+                                android:gravity="center_horizontal|end"
+                                android:inputType="numberDecimal"
+                                android:minEms="3"
+                                android:textAlignment="viewEnd"
+                                android:textColor="@color/primaryDarkColor" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                    </TableRow>
+
+                </TableLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/btnSave"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:layout_marginBottom="32dp"
+                android:background="@color/primaryLightColor"
+                android:drawableStart="@android:drawable/ic_menu_save"
+                android:paddingHorizontal="10dp"
+                android:text="@string/save_settings"
+                android:textColor="@color/primaryTextColor"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

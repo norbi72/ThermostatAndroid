@@ -15,11 +15,15 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Locale;
 
+import hu.norbi.thermostat.MainActivity;
 import hu.norbi.thermostat.R;
 
 public class MqttHelper {
     private MqttAndroidClient mqttAndroidClient;
+    private MainActivity mainActivity;
 
     private final String serverUri;
 
@@ -30,13 +34,14 @@ public class MqttHelper {
     private final String username;
     private final String password;
 
-    public MqttHelper(Context context){
+    public MqttHelper(Context context, MainActivity mainActivity){
         serverUri = context.getString(R.string.mqtt_server_url);
         clientId = context.getString(R.string.mqtt_client_id);
         subscriptionTopic = context.getString(R.string.mqtt_subscription_topic);
         username = context.getString(R.string.mqtt_username);
         password = context.getString(R.string.mqrr_password);
 
+        this.mainActivity = mainActivity;
         mqttAndroidClient = new MqttAndroidClient(context, serverUri, clientId);
         mqttAndroidClient.setCallback(new MqttCallbackExtended() {
             @Override
@@ -149,5 +154,20 @@ public class MqttHelper {
     // {"times":["5:45","17:30","22:45"]}
     public void requestTimes() {
         this.sendMessage("thermostat/state/cmd", "{\"get\":\"times\"}");
+    }
+
+    // {"set":{"target":[[19.5,20.9,20.5],[21.5,21.5,20.5]],"times":["5:45","17:30","22:45"]}}
+    // TODO: handle status
+    // 2020-06-04 08:51:34.147 15222-15222/hu.norbi.thermostat D/Debug: Topic: thermostat/state/response Msg: {"configChanged":"target"}
+    //2020-06-04 08:51:34.167 15222-15222/hu.norbi.thermostat D/Debug: Topic: thermostat/state/response Msg: {"configChanged":"times"}
+    //2020-06-04 08:51:34.182 15222-15222/hu.norbi.thermostat D/Debug: Topic: thermostat/state/response Msg: {"setDefaults":"success","flashStore":"success"}
+    public void requestStoreConfig(List<Double> targetTemperatures, List<String> times) {
+        final String targetStr = String.format(Locale.US, "[[%1$.1f,%2$.1f,%3$.1f],[%4$.1f,%5$.1f,%6$.1f]]", targetTemperatures.get(0), targetTemperatures.get(1), targetTemperatures.get(2), targetTemperatures.get(3), targetTemperatures.get(4), targetTemperatures.get(5));
+        final String timesStr = String.format("[\"%1$s\",\"%2$s\",\"%3$s\"]", times.get(0), times.get(1), times.get(2));
+        final String payload = String.format("{\"set\":{\"target\":%1$s,\"times\":%2$s}}", targetStr, timesStr);
+        Log.d("mqtt", payload);
+
+        this.sendMessage("thermostat/state/cmd", payload);
+        this.mainActivity.mViewModel.setStoreConfigStatus(MainActivityViewModel.ConfigStatus.REQUESTED);
     }
 }

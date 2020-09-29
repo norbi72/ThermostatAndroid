@@ -12,6 +12,7 @@ import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -68,7 +69,7 @@ public class ThermostatMqttCallbackExtended implements MqttCallbackExtended {
 
     private void changeIcon(String iconId) {
         Drawable icon;
-        Integer iconValue = Integer.valueOf(iconId);
+        int iconValue = Integer.parseInt(iconId);
         switch (iconValue) {
             case 0:
                 icon = mainActivity.getResources().getDrawable(R.drawable.ic_sun, null);
@@ -89,6 +90,7 @@ public class ThermostatMqttCallbackExtended implements MqttCallbackExtended {
     }
 
     private void setPower(String state) {
+        mainActivity.powerIconView.setImageAlpha(255);
         mainActivity.powerIconView.setVisibility(state.equalsIgnoreCase("heating") ? View.VISIBLE : View.INVISIBLE);
         mainActivity.mViewModel.setState(state);
     }
@@ -121,7 +123,7 @@ public class ThermostatMqttCallbackExtended implements MqttCallbackExtended {
     }
 
     private void setTimes(String timesJsonArray) {
-        final String[] timesArray3 = timesJsonArray.substring(1, timesJsonArray.length()-1).split(",");
+        final String[] timesArray3 = Arrays.stream(timesJsonArray.substring(1, timesJsonArray.length()-1).split(",")).map(element -> element.substring(1, element.length()-1)).toArray(String[]::new);
 
         this.times.clear();
         Collections.addAll(this.times, timesArray3);
@@ -131,15 +133,15 @@ public class ThermostatMqttCallbackExtended implements MqttCallbackExtended {
 
     public void setTimesEditText(final String[] timesArray3) {
         if (null != mainActivity.dayStartEdit) {
-            final String dayStart = timesArray3[0].substring(1, timesArray3[0].length() - 1);
+            final String dayStart = timesArray3[0]; //.substring(1, timesArray3[0].length() - 1);
             mainActivity.dayStartEdit.setText(dayStart);
             mainActivity.nightEndEdit.setText(dayStart);
 
-            final String tvStart = timesArray3[1].substring(1, timesArray3[1].length() - 1);
+            final String tvStart = timesArray3[1]; //.substring(1, timesArray3[1].length() - 1);
             mainActivity.dayEndEdit.setText(tvStart);
             mainActivity.tvStartEdit.setText(tvStart);
 
-            final String nightStart = timesArray3[2].substring(1, timesArray3[2].length() - 1);
+            final String nightStart = timesArray3[2]; //.substring(1, timesArray3[2].length() - 1);
             mainActivity.nightStartEdit.setText(nightStart);
             mainActivity.tvEndEdit.setText(nightStart);
 
@@ -154,6 +156,10 @@ public class ThermostatMqttCallbackExtended implements MqttCallbackExtended {
         final int hour = Integer.parseInt(timeParts[0]);
         final int minutes = Integer.parseInt(timeParts[1]);
         return hour*60 + minutes;
+    }
+
+    private void setSetDefaults(String bool) {
+        this.mainActivity.mViewModel.setStoreConfigStatus("success".equals(bool) ? MainActivityViewModel.ConfigStatus.STORED : MainActivityViewModel.ConfigStatus.ERROR);
     }
 
     @Override
@@ -192,6 +198,10 @@ public class ThermostatMqttCallbackExtended implements MqttCallbackExtended {
                 setTargetTemps(msg.substring(msg.indexOf("\"target\":")+9, msg.length()-1));
             } else if (msg.contains("\"times\":")) {
                 setTimes(msg.substring(msg.indexOf("\"times\":")+8, msg.length()-1));
+            } else if (msg.contains("\"setDefaults\":")) {
+                // {"setDefaults":"success","flashStore":"success"}
+                int firstChar = msg.indexOf("\"setDefaults\":") + 15;
+                setSetDefaults(msg.substring(firstChar, msg.indexOf("\"", firstChar+1)-1));
             }
         } else if (topic.endsWith("/screen")) {
             if (msg.contains("reference temp changed to ")) {

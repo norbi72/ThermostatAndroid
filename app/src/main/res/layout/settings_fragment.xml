@@ -26,6 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/label_day_periods"
+            android:textColor="@color/primaryDarkColor"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -52,8 +53,10 @@
                 android:layout_width="52dp"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="10dp"
-                android:background="@color/primaryDarkColor"
+                android:background="@color/transparent"
                 android:contentDescription="@string/description_night_time"
+                android:tint="@color/primaryDarkColor"
+                android:tooltipText="@string/description_night_time"
                 app:srcCompat="@drawable/ic_moon" />
 
             <com.google.android.material.textfield.TextInputLayout
@@ -62,15 +65,17 @@
                 android:layout_weight="1"
                 android:enabled="false"
                 android:hint="@string/hint_start"
+                android:textColorHint="@color/primaryDarkColor"
                 app:hintEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/nightStartEdit"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:editable="false"
                     android:ems="10"
                     android:inputType="time"
+                    android:textColor="@color/primaryDarkColor"
                     tools:ignore="Deprecated" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -78,6 +83,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/primaryDarkColor"
                 android:text="@string/dash" />
 
             <com.google.android.material.textfield.TextInputLayout
@@ -86,6 +92,7 @@
                 android:layout_weight="1"
                 android:enabled="false"
                 android:hint="@string/hint_end"
+                android:textColorHint="@color/primaryDarkColor"
                 app:hintEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -95,6 +102,7 @@
                     android:editable="false"
                     android:ems="10"
                     android:inputType="time"
+                    android:textColor="@color/primaryDarkColor"
                     tools:ignore="Deprecated" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -109,8 +117,10 @@
                 android:layout_width="52dp"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="10dp"
-                android:background="@color/primaryDarkColor"
+                android:background="@color/transparent"
                 android:contentDescription="@string/description_day_time"
+                android:tint="@color/primaryDarkColor"
+                android:tooltipText="@string/description_day_time"
                 app:srcCompat="@drawable/ic_sun" />
 
             <com.google.android.material.textfield.TextInputLayout
@@ -119,6 +129,8 @@
                 android:layout_weight="1"
                 android:enabled="false"
                 android:hint="@string/hint_start"
+                android:textColorHint="@color/primaryDarkColor"
+                android:orientation="vertical"
                 app:hintEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -128,6 +140,7 @@
                     android:editable="false"
                     android:ems="10"
                     android:inputType="time"
+                    android:textColor="@color/primaryDarkColor"
                     tools:ignore="Deprecated" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -135,6 +148,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/primaryDarkColor"
                 android:text="@string/dash" />
 
             <com.google.android.material.textfield.TextInputLayout
@@ -143,6 +157,7 @@
                 android:layout_weight="1"
                 android:enabled="false"
                 android:hint="@string/hint_end"
+                android:textColorHint="@color/primaryDarkColor"
                 app:hintEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -152,6 +167,7 @@
                     android:editable="false"
                     android:ems="10"
                     android:inputType="time"
+                    android:textColor="@color/primaryDarkColor"
                     tools:ignore="Deprecated" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -166,8 +182,10 @@
                 android:layout_width="52dp"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="10dp"
-                android:background="@color/primaryDarkColor"
+                android:background="@color/transparent"
                 android:contentDescription="@string/description_tv_time"
+                android:tint="@color/primaryDarkColor"
+                android:tooltipText="@string/description_tv_time"
                 app:srcCompat="@drawable/ic_tv" />
 
             <com.google.android.material.textfield.TextInputLayout
@@ -176,6 +194,7 @@
                 android:layout_weight="1"
                 android:enabled="false"
                 android:hint="@string/hint_start"
+                android:textColorHint="@color/primaryDarkColor"
                 app:hintEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -185,6 +204,7 @@
                     android:editable="false"
                     android:ems="10"
                     android:inputType="time"
+                    android:textColor="@color/primaryDarkColor"
                     tools:ignore="Deprecated" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -192,6 +212,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/primaryDarkColor"
                 android:text="@string/dash" />
 
             <com.google.android.material.textfield.TextInputLayout
@@ -200,6 +221,7 @@
                 android:layout_weight="1"
                 android:enabled="false"
                 android:hint="@string/hint_end"
+                android:textColorHint="@color/primaryDarkColor"
                 app:hintEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -209,6 +231,7 @@
                     android:editable="false"
                     android:ems="10"
                     android:inputType="time"
+                    android:textColor="@color/primaryDarkColor"
                     tools:ignore="Deprecated" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -219,6 +242,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:text="@string/label_target_temperatures"
+            android:textColor="@color/primaryDarkColor"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -242,7 +266,8 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/label_weekday" />
+                        android:text="@string/label_weekday"
+                        android:textColor="@color/primaryDarkColor" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -255,7 +280,8 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/label_weekend" />
+                        android:text="@string/label_weekend"
+                        android:textColor="@color/primaryDarkColor" />
                 </com.google.android.material.textfield.TextInputLayout>
 
             </TableRow>
@@ -268,8 +294,10 @@
                     android:layout_width="52dp"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="10dp"
-                    android:background="@color/primaryDarkColor"
+                    android:background="@color/transparent"
                     android:contentDescription="@string/description_nighttime"
+                    android:tint="@color/primaryDarkColor"
+                    android:tooltipText="@string/description_night_time"
                     app:srcCompat="@drawable/ic_moon" />
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -278,6 +306,7 @@
                     android:layout_column="1"
                     android:layout_weight="1"
                     app:suffixText=" °C"
+                    app:suffixTextColor="@color/primaryDarkColor"
                     app:suffixTextAppearance="@style/TextAppearance.AppCompat.Medium">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -286,7 +315,8 @@
                         android:layout_height="match_parent"
                         android:inputType="numberDecimal"
                         android:minEms="3"
-                        android:textAlignment="viewEnd" />
+                        android:textAlignment="viewEnd"
+                        android:textColor="@color/primaryDarkColor" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -296,6 +326,7 @@
                     android:layout_column="1"
                     android:layout_weight="1"
                     app:suffixText=" °C"
+                    app:suffixTextColor="@color/primaryDarkColor"
                     app:suffixTextAppearance="@style/TextAppearance.AppCompat.Medium">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -304,7 +335,8 @@
                         android:layout_height="match_parent"
                         android:inputType="numberDecimal"
                         android:minEms="3"
-                        android:textAlignment="viewEnd" />
+                        android:textAlignment="viewEnd"
+                        android:textColor="@color/primaryDarkColor" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -318,8 +350,10 @@
                     android:layout_width="52dp"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="10dp"
-                    android:background="@color/primaryDarkColor"
+                    android:background="@color/transparent"
                     android:contentDescription="@string/description_daytime"
+                    android:tint="@color/primaryDarkColor"
+                    android:tooltipText="@string/description_day_time"
                     app:srcCompat="@drawable/ic_sun" />
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -328,6 +362,7 @@
                     android:layout_column="1"
                     android:layout_weight="1"
                     app:suffixText=" °C"
+                    app:suffixTextColor="@color/primaryDarkColor"
                     app:suffixTextAppearance="@style/TextAppearance.AppCompat.Medium">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -336,7 +371,8 @@
                         android:layout_height="match_parent"
                         android:inputType="numberDecimal"
                         android:minEms="3"
-                        android:textAlignment="viewEnd" />
+                        android:textAlignment="viewEnd"
+                        android:textColor="@color/primaryDarkColor" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -346,6 +382,7 @@
                     android:layout_column="1"
                     android:layout_weight="1"
                     app:suffixText=" °C"
+                    app:suffixTextColor="@color/primaryDarkColor"
                     app:suffixTextAppearance="@style/TextAppearance.AppCompat.Medium">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -354,7 +391,8 @@
                         android:layout_height="match_parent"
                         android:inputType="numberDecimal"
                         android:minEms="3"
-                        android:textAlignment="viewEnd" />
+                        android:textAlignment="viewEnd"
+                        android:textColor="@color/primaryDarkColor" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -368,8 +406,10 @@
                     android:layout_width="52dp"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="10dp"
-                    android:background="@color/primaryDarkColor"
+                    android:background="@color/transparent"
                     android:contentDescription="@string/description_tv_time"
+                    android:tint="@color/primaryDarkColor"
+                    android:tooltipText="@string/description_tv_time"
                     app:srcCompat="@drawable/ic_tv" />
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -378,6 +418,7 @@
                     android:layout_column="1"
                     android:layout_weight="1"
                     app:suffixText=" °C"
+                    app:suffixTextColor="@color/primaryDarkColor"
                     app:suffixTextAppearance="@style/TextAppearance.AppCompat.Medium">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -386,7 +427,8 @@
                         android:layout_height="match_parent"
                         android:inputType="numberDecimal"
                         android:minEms="3"
-                        android:textAlignment="viewEnd" />
+                        android:textAlignment="viewEnd"
+                        android:textColor="@color/primaryDarkColor" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -396,6 +438,7 @@
                     android:layout_column="1"
                     android:layout_weight="1"
                     app:suffixText=" °C"
+                    app:suffixTextColor="@color/primaryDarkColor"
                     app:suffixTextAppearance="@style/TextAppearance.AppCompat.Medium">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -404,7 +447,8 @@
                         android:layout_height="match_parent"
                         android:inputType="numberDecimal"
                         android:minEms="3"
-                        android:textAlignment="viewEnd" />
+                        android:textAlignment="viewEnd"
+                        android:textColor="@color/primaryDarkColor" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 

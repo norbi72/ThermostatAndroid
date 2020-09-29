@@ -13,6 +13,13 @@ import hu.norbi.thermostat.R;
 
 public class MainActivityViewModel extends AndroidViewModel implements Serializable {
 
+    public enum ConfigStatus {
+        MODIFIED,
+        REQUESTED,
+        STORED,
+        ERROR
+    }
+
     private final long REFERENCE_TIMESTAMP;
     private long lastChangeTime;
     private String targetTemp;
@@ -23,6 +30,7 @@ public class MainActivityViewModel extends AndroidViewModel implements Serializa
     private List<TempRecord> tempRecords = new ArrayList<>();
     private List<Integer> sliderPositions = new ArrayList<>();
     private List<Double> targetTemperatures = new ArrayList<>();
+    private ConfigStatus storeConfigStatus;
 
     public MainActivityViewModel(@NonNull Application application) {
         super(application);
@@ -120,6 +128,10 @@ public class MainActivityViewModel extends AndroidViewModel implements Serializa
 
     public void setTargetTemperatures(List<Double> targetTemperatures) {
         this.targetTemperatures = targetTemperatures;
+    }
+
+    public void setStoreConfigStatus(ConfigStatus status) {
+        this.storeConfigStatus = status;
     }
 
     @Override

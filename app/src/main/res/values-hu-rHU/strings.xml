@@ -14,7 +14,7 @@
     <string name="title_home">Grafikon</string>
     <string name="title_settings">Beállítások</string>
     <string name="description_tv_time">TV idő</string>
-    <string name="description_daytime">Nappal</string>reference temp changed to
+    <string name="description_daytime">Nappal</string>
     <string name="description_nighttime">Éjszaka</string>
     <string name="description_day_time">Nappal</string>
     <string name="description_night_time">Éjszaka</string>
@@ -25,4 +25,13 @@
     <string name="label_weekend">Hétvége</string>
     <string name="label_weekday">Hétköznap</string>
     <string name="save_settings">Beállítások mentése</string>
+    <string name="confirmSave">Biztosan menteni akarod az új beállításokat?</string>
+    <string name="answerYes">Igen</string>
+    <string name="answerNo">Nem</string>
+    <string name="weekend_tv_time_target_temperature">Hétvégén a hőmérséklet TV nézéshez</string>
+    <string name="weekday_tv_time_target_temperature">Hétköznap a hőmérséklet TV nézéshez</string>
+    <string name="weekend_day_target_temperature">Hétvégén napközben a hőmérséklet</string>
+    <string name="weekday_night_target_temperature">Hétköznap éjjel a hőmérséklet</string>
+    <string name="weekday_day_target_temperature">Hétköznap napközben a hőmérséklet</string>
+    <string name="weekend_night_target_temperature">Hétvégén éjjel a hőmérséklet</string>
 </resources>

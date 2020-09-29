@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     public ImageView statusIconView;
     public ImageView powerIconView;
     public ChartHelper mChart;
+    public Button btnSaveSettings;
     @SuppressWarnings("FieldCanBeLocal")
     private LineChart chart;
     public long REFERENCE_TIMESTAMP;
@@ -83,7 +85,10 @@ public class MainActivity extends AppCompatActivity {
         currentTargetView = findViewById(R.id.targetTempView);
         currentTempView = findViewById(R.id.currentTempView);
         statusIconView = findViewById(R.id.statusIconView);
+        statusIconView.setVisibility(View.INVISIBLE);
         powerIconView = findViewById(R.id.powerIconView);
+        powerIconView.setVisibility(View.VISIBLE);
+        powerIconView.setImageAlpha(50);
         currentTempLayout = findViewById(R.id.currentTempLayout);
 
         // Extra icon in ActionBar
@@ -155,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startMqtt(){
-        mqttHelper = new MqttHelper(getApplicationContext());
+        mqttHelper = new MqttHelper(getApplicationContext(), this);
         thermostatMqttCallback = new ThermostatMqttCallbackExtended(this);
         mqttHelper.setCallback(thermostatMqttCallback);
     }

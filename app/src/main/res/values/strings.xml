@@ -29,4 +29,13 @@
     <string name="label_target_temperatures">Target temperatures</string>
     <string name="save_settings">Save settings</string>
     <string name="dash" translatable="false">—</string>
+    <string name="confirmSave">Do you want to save new settings?</string>
+    <string name="answerYes">Yes</string>
+    <string name="answerNo">No</string>
+    <string name="weekend_tv_time_target_temperature">Weekend tv-time target temperature</string>
+    <string name="weekday_tv_time_target_temperature">Weekday tv-time target temperature</string>
+    <string name="weekend_day_target_temperature">Weekend day target temperature</string>
+    <string name="weekday_day_target_temperature">Weekday day target temperature</string>
+    <string name="weekend_night_target_temperature">Weekend night target temperature</string>
+    <string name="weekday_night_target_temperature">Weekday night target temperature</string>
 </resources>

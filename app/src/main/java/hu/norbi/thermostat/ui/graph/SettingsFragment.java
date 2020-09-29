@@ -1,6 +1,8 @@
 package hu.norbi.thermostat.ui.graph;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.InputFilter;
@@ -16,6 +18,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import hu.norbi.thermostat.MainActivity;
 import hu.norbi.thermostat.R;
@@ -60,6 +63,7 @@ public class SettingsFragment extends Fragment {
         this.mainActivity.dayEndEdit = mainActivity.findViewById(R.id.dayEndEdit);
         this.mainActivity.tvStartEdit = mainActivity.findViewById(R.id.tvStartEdit);
         this.mainActivity.tvEndEdit = mainActivity.findViewById(R.id.tvEndEdit);
+        this.mainActivity.btnSaveSettings = mainActivity.findViewById(R.id.btnSave);
 
         this.mainActivity.weekdayNightTempEdit = mainActivity.findViewById(R.id.weekdayNightTempEdit);
         this.mainActivity.weekdayDayTempEdit = mainActivity.findViewById(R.id.weekdayDayTempEdit);
@@ -76,15 +80,32 @@ public class SettingsFragment extends Fragment {
         this.mainActivity.weekendTvTempEdit.setFilters(new InputFilter[] {new DecimalDigitsInputFilter(2,1)});
 
         this.mainActivity.multiSlider = mainActivity.findViewById(R.id.range_slider5);
-    }
 
-//    @Override
-//    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-//        // onAppStart and onRotate
-//        super.onActivityCreated(savedInstanceState);
-//        Log.d("settingsFragment", "Activity created");
-//        mViewModel = new ViewModelProvider(this).get(MainActivityViewModel.class);
-//    }
+        DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
+            switch (which){
+                case DialogInterface.BUTTON_POSITIVE:
+                    //Yes button clicked
+                    System.out.println("Yes");
+                    mainActivity.mqttHelper.requestStoreConfig(mViewModel.getTargetTemperatures(), mViewModel.getSliderPositions().stream().map(this::getTimeFrom).collect(Collectors.toList()));
+                    break;
+
+                case DialogInterface.BUTTON_NEGATIVE:
+                    //No button clicked
+                    System.out.println("No");
+                    break;
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
+        this.mainActivity.btnSaveSettings.setOnClickListener(b -> {
+            AlertDialog dialog = builder
+                    .setMessage(R.string.confirmSave)
+                    .setPositiveButton(R.string.answerYes, dialogClickListener)
+                    .setNegativeButton(R.string.answerNo, dialogClickListener)
+                    .show();
+            dialog.setCanceledOnTouchOutside(true);
+        });
+    }
 
     @Override
     public void onResume() {
@@ -142,10 +163,7 @@ public class SettingsFragment extends Fragment {
             }
             final String[] times = new String[3];
             for (int i = 0; i < 3; i++) {
-                final Integer sliderPosition = mViewModel.getSliderPosition(i);
-                final int hours = sliderPosition / 60;
-                final int minutes = sliderPosition % 60;
-                times[i] = String.format("\"%1$02d:%2$02d\"", hours, minutes);
+                times[i] = getTimeFrom(mViewModel.getSliderPosition(i));
             }
 
             this.mainActivity.thermostatMqttCallback.setTimesEditText(times);
@@ -163,22 +181,23 @@ public class SettingsFragment extends Fragment {
         }
 
         this.mainActivity.multiSlider.setOnThumbValueChangeListener((multiSlider, thumb, thumbIndex, value) -> {
-            Log.d("settings", "Thumb: " + thumbIndex + " value: " + value);
+            Log.d("settingsFragment", "Thumb: " + thumbIndex + " value: " + value);
             if (thumbIndex > 2) return;
             if (!creating) mViewModel.setSliderPosition(thumbIndex, value);
 
+            String time = getTimeFrom(value);
             switch (thumbIndex) {
                 case 0:
-                    this.mainActivity.nightEndEdit.setText(getTimeFrom(value));
-                    this.mainActivity.dayStartEdit.setText(getTimeFrom(value));
+                    this.mainActivity.nightEndEdit.setText(time);
+                    this.mainActivity.dayStartEdit.setText(time);
                     break;
                 case 1:
-                    this.mainActivity.dayEndEdit.setText(getTimeFrom(value));
-                    this.mainActivity.tvStartEdit.setText(getTimeFrom(value));
+                    this.mainActivity.dayEndEdit.setText(time);
+                    this.mainActivity.tvStartEdit.setText(time);
                     break;
                 case 2:
-                    this.mainActivity.tvEndEdit.setText(getTimeFrom(value));
-                    this.mainActivity.nightStartEdit.setText(getTimeFrom(value));
+                    this.mainActivity.tvEndEdit.setText(time);
+                    this.mainActivity.nightStartEdit.setText(time);
                     break;
             }
 
